@@ -7,8 +7,9 @@ const app = new App({
     appToken: process.env.SOCKET_MODE_TOKEN
 });
 
-app.message('hello', async ({ message, say }) => {
+app.message(async ({ message, say }) => {
     console.log(message, say);
+    // extract the channel-ID from the say-object
     await say(`Hey there <@${message.user}>!`);
 });
 
