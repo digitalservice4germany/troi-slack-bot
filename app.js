@@ -1,10 +1,10 @@
 const { App } = require('@slack/bolt');
 
 const app = new App({
-    token: process.env.SLACK_BOT_TOKEN,
+    token: process.env.BOT_USER_OAUTH_TOKEN,
     signingSecret: process.env.SLACK_SIGNING_SECRET,
     socketMode: true,
-    appToken: process.env.APP_TOKEN
+    appToken: process.env.SOCKET_MODE_TOKEN
 });
 
 app.message('hello', async ({ message, say }) => {
@@ -16,7 +16,7 @@ app.message('hello', async ({ message, say }) => {
 async function postMessage() {
     try {
         const result = await app.client.chat.postMessage({
-            token: process.env.SLACK_BOT_TOKEN,
+            token: process.env.BOT_USER_OAUTH_TOKEN,
             channel: "",
             text: "..."
         });
