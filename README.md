@@ -1,4 +1,4 @@
-# troi-slack-bot
+# 🤖 ⏳ Troi Slack Bot
 Slack bot to help you fill out Troi.
 
 Follow [this](https://slack.dev/bolt-js/tutorial/getting-started) tutorial for the required Setup in Slack.
