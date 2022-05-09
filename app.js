@@ -12,7 +12,8 @@ app.message('hello', async ({ message, say }) => {
     await say(`Hey there <@${message.user}>!`);
 });
 
-async function publishMessage() {
+// via https://api.slack.com/messaging/sending#publishing
+async function postMessage() {
     try {
         const result = await app.client.chat.postMessage({
             token: process.env.SLACK_BOT_TOKEN,
@@ -27,6 +28,6 @@ async function publishMessage() {
 
 (async () => {
     await app.start();
-    // await publishMessage();
-    console.log('⚡️ Bolt app is running!');
+    // await postMessage();
+    console.log('Troi Slack Bot app is running');
 })();
