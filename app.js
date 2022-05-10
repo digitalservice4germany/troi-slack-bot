@@ -7,10 +7,25 @@ const app = new App({
     appToken: process.env.SOCKET_MODE_TOKEN
 });
 
+const users = {};
+
 app.message(async ({ message, say }) => {
-    console.log(message, say);
-    // extract the channel-ID from the say-object
-    await say(`Hey there <@${message.user}>!`);
+    if (!users[message.user]) {
+        users[message.user] = {
+            userID: message.user,
+            channelID: message.channel
+        };
+    }
+    console.log("users", users);
+    switch(message.text) {
+        case "start reminders":
+            break;
+        case "stop reminders":
+            break;
+        default:
+            await say("Got the message, thanks"); // say(`Hey there <@${message.user}>!`)
+            break;
+    }
 });
 
 // via https://api.slack.com/messaging/sending#publishing
