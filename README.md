@@ -24,8 +24,8 @@ The following steps for setting up the Slack app are adapted from [this](https:/
 - Scroll up to *OAuth Tokens for Your Workspace* and click *Install to Workspace*
 - After that, a **Bot User OAuth Token** gets generated, that's the `BOT_USER_OAUTH_TOKEN` we need
 - Under *Socket Mode* (left sidebar) turn on *Enable Socket Mode*, here you create the `SOCKET_MODE_TOKEN`
-- Under *Event Subscriptions* (left sidebar) turn on *Enable Events* and add the *Bot User Events* `message.im` (also *app_home_opened* if you want to react to that somehow)
-- Under *App Home* (left sidebar) show bot as always online if you want to and turn on *Home Tab* and set the checkmark below the turned on *Messages Tab* to active
+- Under *Event Subscriptions* (left sidebar) turn on *Enable Events* and add the *Bot User Events* `message.im`
+- Under *App Home* (left sidebar) show bot as always online if you want to and set the checkmark below the turned on *Messages Tab* to active
 - Under *App Manifest* (left sidebar) set `messages_tab_enabled` to `true` (as seen [here](https://stackoverflow.com/a/69937581)) --> *Save Changes*
 - If you make changes to scopes/permissions etc., reinstall the your app to the Workspace (under *Basic Information*, *Install your app*)
 
