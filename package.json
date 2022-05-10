@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "@slack/bolt": "^3.11.0",
-    "bree": "^8.0.3"
+    "bree": "^8.0.3",
+    "crypto-js": "^4.1.1",
+    "node-fetch": "^2.6.7"
   }
 }
