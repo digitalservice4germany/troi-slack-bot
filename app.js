@@ -15,14 +15,21 @@ app.message(async ({ message, say }) => {
     if (!users[message.user]) {
         users[message.user] = {
             userID: message.user,
-            channelID: message.channel
+            channelID: message.channel,
+            troi: {
+                username: null,
+                password: null
+            }
         };
     }
-    console.log("users", users);
-    switch(message.text) {
-        case "start reminders":
+    let user = users[message.user];
+    let parts = message.text.split(' ');
+    switch(parts[0]) {
+        case "username":
+            user.troi.username = parts[1];
             break;
-        case "stop reminders":
+        case "password":
+            user.troi.password = parts[1];
             break;
         default:
             await say("Got the message, thanks"); // say(`Hey there <@${message.user}>!`)
@@ -70,7 +77,7 @@ const bree = new Bree({
     console.log(troiApi.clientId, troiApi.employeeId);
 
     await app.start();
-    bree.start();
+    // bree.start();
     // await postMessage();
     console.log('BleibTroy is running');
 })();
