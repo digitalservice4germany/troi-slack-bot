@@ -1,4 +1,5 @@
 const { App } = require('@slack/bolt');
+const Bree = require('bree');
 
 const app = new App({
     token: process.env.BOT_USER_OAUTH_TOKEN,
@@ -40,10 +41,25 @@ async function postMessage() {
     } catch (error) {
         console.error(error);
     }
-};
+}
+
+const bree = new Bree({
+    jobs: [
+        {
+            name: 'reminder',
+            interval: '10s',
+            worker: {
+                workerData: {
+                    foo: 'bar'
+                }
+            }
+        },
+    ]
+});
 
 (async () => {
     await app.start();
+    bree.start();
     // await postMessage();
     console.log('Troi Slack Bot app is running');
 })();
