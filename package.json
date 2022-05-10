@@ -1,8 +1,28 @@
 {
+  "name": "troi-slack-bot",
+  "description": "Slack bot to help you fill out Troi",
+  "version": "0.0.1",
+  "main": "app.js",
   "dependencies": {
     "@slack/bolt": "^3.11.0",
     "bree": "^8.0.3",
     "crypto-js": "^4.1.1",
     "node-fetch": "^2.6.7"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/digitalservice4germany/troi-slack-bot.git"
+  },
+  "keywords": [
+    "troi",
+    "timetracking",
+    "slack",
+    "app",
+    "bot"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/digitalservice4germany/troi-slack-bot/issues"
+  },
+  "homepage": "https://github.com/digitalservice4germany/troi-slack-bot#readme"
 }
