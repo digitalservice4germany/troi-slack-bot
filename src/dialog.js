@@ -1,15 +1,6 @@
 const TroiApiService = require('../lib/TroiApiService.js');
 const moment = require('moment');
 
-/*let endDate = new Date();
-let startDate = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
-let entries = await troiApi.getTimeEntries(
-    projects[0].id,
-    moment(startDate).format("YYYYMMDD"),
-    moment(endDate).format("YYYYMMDD")
-);
-console.log("entries", entries);*/
-
 let troiApi;
 
 exports.handleMessage = async(user, msg) => {
@@ -32,6 +23,21 @@ exports.handleMessage = async(user, msg) => {
             user.troi.username = parts[1].trim().split('/')[0].trim();
             user.troi.password = parts[1].trim().split('/')[1].trim();
             response = "Thanks, username & password saved";
+            break;
+        case "gettimes":
+            if (!user.troi.defaultProject) break;
+            let endDate = new Date();
+            let startDate = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+            let entries = await troiApi.getTimeEntries(
+                user.troi.defaultProject,
+                moment(startDate).format("YYYYMMDD"),
+                moment(endDate).format("YYYYMMDD")
+            );
+            console.log("entries", entries);
+            response = "*Time entries from " + moment(startDate).format("YYYY-MM-DD") + " to " + moment(endDate).format("YYYY-MM-DD") + ":*\n";
+            entries.forEach(entry => {
+                response += entry.date + "\t" + entry.hours + "h\t" + entry.description + "\n";
+            })
             break;
     }
 
