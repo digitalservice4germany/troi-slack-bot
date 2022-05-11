@@ -1,7 +1,7 @@
 const { App } = require('@slack/bolt');
 const Bree = require('bree');
 const moment = require('moment');
-const dialogmanager = require('./dialogmanager.js')
+const dialog = require('./dialog.js')
 
 const app = new App({
     token: process.env.BOT_USER_OAUTH_TOKEN,
@@ -23,7 +23,7 @@ app.message(async ({ message, say }) => {
             }
         };
     }
-    let response = await dialogmanager.handleMessage(users[message.user], message);
+    let response = await dialog.handleMessage(users[message.user], message);
     if (response) {
         await say(response);
     }
