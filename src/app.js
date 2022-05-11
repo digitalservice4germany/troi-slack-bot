@@ -1,5 +1,4 @@
 const { App } = require('@slack/bolt');
-const Bree = require('bree');
 const dialog = require('./dialog.js')
 
 const app = new App({
@@ -44,23 +43,7 @@ async function postMessage() {
     }
 }
 
-const bree = new Bree({
-    jobs: [
-        {
-            name: 'reminder',
-            interval: '10s',
-            worker: {
-                workerData: {
-                    foo: 'bar'
-                }
-            }
-        },
-    ]
-});
-
 (async () => {
     await app.start();
-    // bree.start();
-    // await postMessage();
     console.log('BleibTroy is running');
 })();
