@@ -24,7 +24,7 @@ exports.handleMessage = async(user, msg, reschedule) => {
             user.troi.password = parts[1].trim().split('/')[1].trim();
             response = "Thanks, username & password saved";
             break;
-        // case "pause": e.g. pause for a week, while on holiday etc.
+        // case "pause": e.g. pause for a week, while on holiday etc. TODO
         case "gettimes":
             if (!user.troi.defaultProject) {
                 response = "I don't have information about your project(s) yet, did you not login yet?";
@@ -44,9 +44,9 @@ exports.handleMessage = async(user, msg, reschedule) => {
             })
             break;
         case "reschedule":
-            user.reminder.rule.hour = 16; // parse from input
+            user.reminder.rule.hour = 16; // parse from input TODO
             reschedule();
-            response = "What an absolute pleasure, your reminder is rescheduled";
+            response = "What an absolute pleasure, your reminder is rescheduled"; // source from locale TODO
             break;
     }
 
@@ -55,7 +55,7 @@ exports.handleMessage = async(user, msg, reschedule) => {
         try {
             await troiApi.initialize();
         } catch (err) {
-            console.error("authentication failed", err);
+            console.error("Authentication failed", err);
         }
         console.log("clientId:", troiApi.clientId, "employeeId:", troiApi.employeeId);
         let projects = await troiApi.getCalculationPositions();
@@ -63,21 +63,21 @@ exports.handleMessage = async(user, msg, reschedule) => {
         if (projects.length === 1) {
             user.troi.defaultProject = projects[0].id;
         } else {
-            // ask users to give nicknames for projects
+            // ask users to give nicknames for projects TODO
         }
     }
 
-    if (parts[0].endsWith("h")) { // add here elaborated fail-safe parsing of all kinds of ways to specify a duration, use https://github.com/agenda/human-interval?
-        let project = user.troi.defaultProject; // deal with multiple projects/nicknames etc.
+    if (parts[0].endsWith("h")) { // add here elaborated fail-safe parsing of all kinds of ways to specify a duration, use https://github.com/agenda/human-interval? TODO
+        let project = user.troi.defaultProject; // deal with multiple projects/nicknames etc. TODO
         let date = moment(new Date()).format("YYYY-MM-DD");
-        let hours = Number.parseFloat(parts[0].substring(0, parts[0].length - 1)); // expects 2.5 and not 2,5 --> support both
+        let hours = Number.parseFloat(parts[0].substring(0, parts[0].length - 1)); // expects 2.5 and not 2,5 --> support both TODO
         let description = msg.text.substring(parts[0].length + 1);
         await troiApi.postTimeEntry(project, date, hours, description);
-        response = "Sweet, your new time entry was added successfully";
+        response = "Sweet, your new time entry was added successfully"; // source from locale TODO
     }
 
     if (!response) {
-        return "Sorry, not sure what you mean";
+        return "Sorry, not sure what you mean"; // source from locale TODO
     }
 
     return response;
