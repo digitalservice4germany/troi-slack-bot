@@ -1,4 +1,4 @@
-const TroiApiService = require('../lib/TroiApiService.js');
+const TroiApiService = require('../lib/TroiApiService');
 const moment = require('moment');
 
 let troiApi;
