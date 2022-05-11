@@ -3,7 +3,8 @@ const de = require('../locale/de.json')
 const en = require('../locale/en.json')
 
 exports.lang = (user, key) => {
-    let json = user.language === "en" ? en : de;
+    let json = user.language.active === "en" ? en : de;
+    user.language.lastUsedKey = key;
     let entry = json[key];
     // distinguish what type of entry it is, could be fix value or array (in that case pick random value) TODO
     return entry[Math.floor(Math.random() * entry.length)];
@@ -13,7 +14,10 @@ exports.buildDefaultUser = message => {
     return {
         user: message.user,
         channel: message.channel,
-        language: "en", // "de"
+        language: {
+            active: "en", // "de"
+            lastUsedKey: null // for sassy suggestions based on whatever the user saw previously :)
+        },
         troi: {
             username: null,
             password: null,

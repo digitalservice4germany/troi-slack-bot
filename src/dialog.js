@@ -49,8 +49,19 @@ exports.handleMessage = async(user, msg, reschedule) => {
             response = "What an absolute pleasure, your reminder is rescheduled"; // source from locale TODO
             break;
         case "setLanguage":
-            user.language = parts[1].trim().toLowerCase(); // parse more solid TODO
+            user.language.active = parts[1].trim().toLowerCase(); // parse more solid TODO
             response = "You got it, language is set to " + user.language;
+            break;
+        case "sassy":
+            if (!user.language.lastUsedKey) {
+                response = "I am so sorry, I don't know what your phrase is meant for!"; // offer solution? TODO
+                break;
+            }
+            let lang = parts[2].trim(); // en or de
+            let suggestion = rawText.substring(("sassy " + lang + " ").length);
+            console.log("sassy", lang, suggestion);
+            response = "You are a true hero, your sassy phrase for *" + user.language.lastUsedKey + "* was recorded";
+            // GitHub PR to locale files? Or collect these somewhere else? Would be cool to have them instantly available TODO
             break;
     }
 
