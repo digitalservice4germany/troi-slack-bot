@@ -1,7 +1,7 @@
 const { App } = require('@slack/bolt');
 const Bree = require('bree');
 const moment = require('moment');
-const TroiApiService = require('./lib/TroiApiService.js');
+const TroiApiService = require('../lib/TroiApiService.js');
 
 const app = new App({
     token: process.env.BOT_USER_OAUTH_TOKEN,
