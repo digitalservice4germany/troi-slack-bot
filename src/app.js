@@ -1,7 +1,6 @@
 const { App } = require('@slack/bolt');
 const Bree = require('bree');
 const moment = require('moment');
-const TroiApiService = require('../lib/TroiApiService.js');
 const dialogmanager = require('./dialogmanager.js')
 
 const app = new App({
@@ -59,32 +58,6 @@ const bree = new Bree({
 });
 
 (async () => {
-    let username = "";
-    let password = "";
-    let troiApi = new TroiApiService(username, password);
-    try {
-        await troiApi.initialize();
-    } catch (err) {
-        console.error("authentication failed", err);
-    }
-    console.log(troiApi.clientId, troiApi.employeeId);
-
-    let projects = await troiApi.getCalculationPositions();
-    console.log(projects, projects.length);
-    if (projects.length === 1) {
-        // all good
-    } else {
-        // ask users to give nicknames
-    }
-    let endDate = new Date();
-    let startDate = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
-    let entries = await troiApi.getTimeEntries(
-        projects[0].id,
-        moment(startDate).format("YYYYMMDD"),
-        moment(endDate).format("YYYYMMDD")
-    );
-    console.log("entries", entries);
-
     await app.start();
     // bree.start();
     // await postMessage();
