@@ -23,10 +23,30 @@ app.message(async ({ message, say }) => {
                 password: null,
                 projects: {}, // key: nickname, value: ID
                 defaultProject: null // ID
+            },
+            reminder: {
+                active: true,
+                pausedUntil: null,
+                rule: {
+                    dayOfWeek: {
+                        fixDay: null,
+                        range: {
+                            start: null,
+                            end: null,
+                            step: null
+                        }
+                    },
+                    hour: null,
+                    minute: null
+                }
             }
         };
         users[message.user] = user;
-        schedule.scheduleJob("reminder_" + user.user, '*/10 * * * * *', () => {
+        const rule = new schedule.RecurrenceRule();
+        rule.dayOfWeek = new schedule.Range(1, 5); // = weekdays, also skip public holidays?
+        rule.hour = 17;
+        rule.minute = 0;
+        let job = schedule.scheduleJob("reminder_" + user.user, rule, () => {
             postMessage(user, "reminder");
         });
     }

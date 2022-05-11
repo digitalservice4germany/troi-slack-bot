@@ -24,6 +24,7 @@ exports.handleMessage = async(user, msg) => {
             user.troi.password = parts[1].trim().split('/')[1].trim();
             response = "Thanks, username & password saved";
             break;
+        // case "pause": e.g. pause for a week, while on holiday etc.
         case "gettimes":
             if (!user.troi.defaultProject) {
                 response = "I don't have information about your project(s) yet, did you not login yet?";
@@ -61,7 +62,7 @@ exports.handleMessage = async(user, msg) => {
         }
     }
 
-    if (parts[0].endsWith("h")) { // add here elaborated fail-safe parsing of all kinds of ways to specify a duration
+    if (parts[0].endsWith("h")) { // add here elaborated fail-safe parsing of all kinds of ways to specify a duration, use https://github.com/agenda/human-interval?
         let project = user.troi.defaultProject; // deal with multiple projects/nicknames etc.
         let date = moment(new Date()).format("YYYY-MM-DD");
         let hours = Number.parseFloat(parts[0].substring(0, parts[0].length - 1)); // expects 2.5 and not 2,5 --> support both
