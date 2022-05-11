@@ -15,8 +15,8 @@ const users = {};
 app.message(async ({ message, say }) => {
     if (!users[message.user]) {
         users[message.user] = {
-            userID: message.user,
-            channelID: message.channel,
+            user: message.user,
+            channel: message.channel,
             troi: {
                 username: null,
                 password: null
