@@ -1,6 +1,7 @@
 const { App } = require('@slack/bolt');
 const schedule = require('node-schedule');
 const dialog = require('./dialog.js')
+const {buildRecurrenceRule} = require("./util");
 
 const app = new App({
     token: process.env.BOT_USER_OAUTH_TOKEN,
@@ -31,22 +32,19 @@ app.message(async ({ message, say }) => {
                     dayOfWeek: {
                         fixDay: null,
                         range: {
-                            start: null,
-                            end: null,
+                            start: 1,
+                            end: 5, // 1-5 = weekdays, easy way to skip public holidays?
                             step: null
                         }
                     },
                     hour: null,
-                    minute: null
+                    minute: null,
+                    second: null
                 }
             }
         };
         users[message.user] = user;
-        const rule = new schedule.RecurrenceRule();
-        rule.dayOfWeek = new schedule.Range(1, 5); // = weekdays, also skip public holidays?
-        rule.hour = 17;
-        rule.minute = 0;
-        let job = schedule.scheduleJob("reminder_" + user.user, rule, () => {
+        let job = schedule.scheduleJob("reminder_" + user.user, buildRecurrenceRule(user.reminder.rule), () => {
             postMessage(user, "reminder");
         });
     }
