@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "main": "src/app.js",
   "scripts": {
-    "start": "cd src && node src/app.js"
+    "start": "cd src && node app.js"
   },
   "dependencies": {
     "@slack/bolt": "^3.11.0",

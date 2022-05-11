@@ -2,6 +2,7 @@ const { App } = require('@slack/bolt');
 const Bree = require('bree');
 const moment = require('moment');
 const TroiApiService = require('../lib/TroiApiService.js');
+const dialogmanager = require('./dialogmanager.js')
 
 const app = new App({
     token: process.env.BOT_USER_OAUTH_TOKEN,
@@ -23,18 +24,9 @@ app.message(async ({ message, say }) => {
             }
         };
     }
-    let user = users[message.user];
-    let parts = message.text.split(' ');
-    switch(parts[0]) {
-        case "username":
-            user.troi.username = parts[1];
-            break;
-        case "password":
-            user.troi.password = parts[1];
-            break;
-        default:
-            await say("Got the message, thanks"); // say(`Hey there <@${message.user}>!`)
-            break;
+    let response = await dialogmanager.handleMessage(users[message.user], message);
+    if (response) {
+        await say(response);
     }
 });
 
