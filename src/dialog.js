@@ -3,7 +3,7 @@ const moment = require('moment');
 
 let troiApi;
 
-exports.handleMessage = async(user, msg) => {
+exports.handleMessage = async(user, msg, reschedule) => {
     // msg.text is already encoded and "&" turns into "&amp;" for instance
     // that distorts passwords if they have special characters
     let rawText = msg.blocks[0].elements[0].elements[0].text; // is this path always existing/correct though?
@@ -42,6 +42,11 @@ exports.handleMessage = async(user, msg) => {
             entries.forEach(entry => {
                 response += entry.date + "\t" + entry.hours + "h\t" + entry.description + "\n";
             })
+            break;
+        case "reschedule":
+            user.reminder.rule.hour = 16; // parse from input
+            reschedule();
+            response = "What an absolute pleasure, your reminder is rescheduled";
             break;
     }
 

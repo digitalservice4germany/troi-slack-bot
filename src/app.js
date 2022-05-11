@@ -22,7 +22,9 @@ app.message(async ({ message, say }) => {
             postMessage(user, "reminder");
         });
     }
-    let response = await dialog.handleMessage(user, message);
+    let response = await dialog.handleMessage(user, message,
+        () => schedule.rescheduleJob("reminder_" + user.user, buildRecurrenceRule(user.reminder.rule))
+    );
     if (response) {
         await say(response);
     }
