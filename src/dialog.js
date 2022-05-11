@@ -25,7 +25,10 @@ exports.handleMessage = async(user, msg) => {
             response = "Thanks, username & password saved";
             break;
         case "gettimes":
-            if (!user.troi.defaultProject) break;
+            if (!user.troi.defaultProject) {
+                response = "I don't have information about your project(s) yet, did you not login yet?";
+                break;
+            }
             let endDate = new Date();
             let startDate = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
             let entries = await troiApi.getTimeEntries(
@@ -64,6 +67,11 @@ exports.handleMessage = async(user, msg) => {
         let hours = Number.parseFloat(parts[0].substring(0, parts[0].length - 1)); // expects 2.5 and not 2,5 --> support both
         let description = msg.text.substring(parts[0].length + 1);
         await troiApi.postTimeEntry(project, date, hours, description);
+        response = "Sweet, your new time entry was added successfully";
+    }
+
+    if (!response) {
+        return "Sorry, not sure what you mean";
     }
 
     return response;
