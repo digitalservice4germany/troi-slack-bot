@@ -1,6 +1,5 @@
 const { App } = require('@slack/bolt');
 const Bree = require('bree');
-const moment = require('moment');
 const dialog = require('./dialog.js')
 
 const app = new App({
@@ -19,7 +18,9 @@ app.message(async ({ message, say }) => {
             channel: message.channel,
             troi: {
                 username: null,
-                password: null
+                password: null,
+                projects: {}, // key: nickname, value: ID
+                defaultProject: null // ID
             }
         };
     }
