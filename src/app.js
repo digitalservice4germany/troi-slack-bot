@@ -11,8 +11,10 @@ const app = new App({
 const users = {};
 
 app.message(async ({ message, say }) => {
-    if (!users[message.user]) {
-        users[message.user] = {
+    let user = users[message.user];
+    if (!user) {
+        // first time we hear from this user
+        user = {
             user: message.user,
             channel: message.channel,
             troi: {
@@ -22,8 +24,9 @@ app.message(async ({ message, say }) => {
                 defaultProject: null // ID
             }
         };
+        users[message.user] = user;
     }
-    let response = await dialog.handleMessage(users[message.user], message);
+    let response = await dialog.handleMessage(user, message);
     if (response) {
         await say(response);
     }
