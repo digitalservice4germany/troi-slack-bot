@@ -1,4 +1,5 @@
 const { App } = require('@slack/bolt');
+const schedule = require('node-schedule');
 const dialog = require('./dialog.js')
 
 const app = new App({
@@ -25,6 +26,9 @@ app.message(async ({ message, say }) => {
             }
         };
         users[message.user] = user;
+        schedule.scheduleJob("reminder_" + user.user, '*/10 * * * * *', () => {
+            postMessage(user, "reminder");
+        });
     }
     let response = await dialog.handleMessage(user, message);
     if (response) {
@@ -32,15 +36,14 @@ app.message(async ({ message, say }) => {
     }
 });
 
-// via https://api.slack.com/messaging/sending#publishing
-async function postMessage() {
+async function postMessage(user, text) {
     try {
         const result = await app.client.chat.postMessage({
             token: process.env.BOT_USER_OAUTH_TOKEN,
-            channel: "",
-            text: "..."
+            channel: user.channel,
+            text: text
         });
-        console.log(result);
+        console.log("Sent message to " + user.user);
     } catch (error) {
         console.error(error);
     }

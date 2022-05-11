@@ -10,7 +10,8 @@
     "@slack/bolt": "^3.11.0",
     "crypto-js": "^4.1.1",
     "moment": "^2.29.3",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^2.6.7",
+    "node-schedule": "^2.1.0"
   },
   "repository": {
     "type": "git",
