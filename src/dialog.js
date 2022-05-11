@@ -25,7 +25,7 @@ exports.handleMessage = async(user, msg, reschedule) => {
             response = "Thanks, username & password saved";
             break;
         // case "pause": e.g. pause for a week, while on holiday etc. TODO
-        case "gettimes":
+        case "getTimes":
             if (!user.troi.defaultProject) {
                 response = "I don't have information about your project(s) yet, did you not login yet?";
                 break;
@@ -47,6 +47,10 @@ exports.handleMessage = async(user, msg, reschedule) => {
             user.reminder.rule.hour = 16; // parse from input TODO
             reschedule();
             response = "What an absolute pleasure, your reminder is rescheduled"; // source from locale TODO
+            break;
+        case "setLanguage":
+            user.language = parts[1].trim().toLowerCase(); // parse more solid TODO
+            response = "You got it, language is set to " + user.language;
             break;
     }
 
