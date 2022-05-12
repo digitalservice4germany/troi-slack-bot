@@ -3,7 +3,7 @@ const schedule = require('node-schedule');
 const dialog = require('./dialog')
 const { buildRecurrenceRule, buildDefaultUser, lang } = require("./util");
 
-const app = new App({
+const slackApp = new App({
     token: process.env.BOT_USER_OAUTH_TOKEN,
     signingSecret: process.env.SLACK_SIGNING_SECRET,
     socketMode: true,
@@ -12,7 +12,8 @@ const app = new App({
 
 const users = {};
 
-app.message(async ({ message, say }) => {
+// INCOMING messages from Slack
+slackApp.message(async ({ message, say }) => {
     let user = users[message.user];
     if (!user) {
         // first time we hear from this user
@@ -30,9 +31,10 @@ app.message(async ({ message, say }) => {
     }
 });
 
+// OUTGOING messages to Slack
 async function postMessage(user, text) {
     try {
-        const result = await app.client.chat.postMessage({
+        const result = await slackApp.client.chat.postMessage({
             token: process.env.BOT_USER_OAUTH_TOKEN,
             channel: user.channel,
             text: text
@@ -44,6 +46,6 @@ async function postMessage(user, text) {
 }
 
 (async () => {
-    await app.start();
+    await slackApp.start();
     console.log('BleibTroy is running');
 })();
