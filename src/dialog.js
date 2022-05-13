@@ -24,7 +24,9 @@ exports.handleMessage = async(user, msg, reschedule) => {
             user.troi.password = parts[1].trim().split('/')[1].trim();
             response = "Thanks, username & password saved";
             break;
-        // case "pause": e.g. pause for a week, while on holiday etc. TODO
+        case "pause":
+            response = "Ok, your reminders are paused until XY"; // TODO
+            break;
         case "getTimes":
             if (!user.troi.defaultProject) {
                 response = "I don't have information about your project(s) yet, did you not login yet?";
@@ -54,7 +56,7 @@ exports.handleMessage = async(user, msg, reschedule) => {
             break;
         case "sassy":
             if (!user.language.lastUsedKey) {
-                response = "I am so sorry, I don't know what your phrase is meant for!"; // offer solution? TODO
+                response = "I am so sorry, I don't know what your phrase is meant for!"; // offer solution? like show all keys from .json? TODO
                 break;
             }
             let lang = parts[2].trim(); // en or de
@@ -62,6 +64,9 @@ exports.handleMessage = async(user, msg, reschedule) => {
             console.log("sassy", lang, suggestion);
             response = "You are a true hero, your sassy phrase for *" + user.language.lastUsedKey + "* was recorded";
             // GitHub PR to locale files? Or collect these somewhere else? Would be cool to have them instantly available TODO
+            break;
+        case "help":
+            response = "This is what you can do with this bot..."; // TODO
             break;
     }
 

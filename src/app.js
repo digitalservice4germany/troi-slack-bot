@@ -20,6 +20,7 @@ slackApp.message(async ({ message, say }) => {
         user = buildDefaultUser(message);
         users[user.user] = user;
         schedule.scheduleJob("reminder_" + user.user, buildRecurrenceRule(user.reminder.rule), () => {
+            // don't if user paused reminders, it's a public holiday or user is on holiday (API-call to Personio or read out Status in Slack?) TODO
             postMessage(user, lang(user, "motivational_prompt"));
         });
     }
