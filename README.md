@@ -20,7 +20,7 @@ The following steps for setting up the Slack app are adapted from [this](https:/
 
 - *Create New App* on [api.slack.com/apps](https://api.slack.com/apps) --> *From scratch*
 - On the *Basic Information* page you land, the **Signing Secret** under *App Credentials* is the `SIGNING_SECRET` we need
-- *OAuth & Permissions* --> *Bot Token Scopes* --> click *Add an OAuth Scope* --> `chat:write`
+- *OAuth & Permissions* --> *Bot Token Scopes* --> click *Add an OAuth Scope* --> `chat:write`, `im:history`, `users:read`, `users:read.email`
 - Scroll up to *OAuth Tokens for Your Workspace* and click *Install to Workspace*
 - After that, a **Bot User OAuth Token** gets generated, that's the `BOT_USER_OAUTH_TOKEN` we need
 - Under *Socket Mode* (left sidebar) turn on *Enable Socket Mode*, here you create the `SOCKET_MODE_TOKEN`

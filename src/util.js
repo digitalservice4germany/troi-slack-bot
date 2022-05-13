@@ -10,16 +10,18 @@ exports.lang = (user, key) => {
     return entry[Math.floor(Math.random() * entry.length)];
 }
 
-exports.buildDefaultUser = message => {
+exports.buildDefaultUser = (message, userInfo) => {
     return {
         user: message.user,
         channel: message.channel,
+        displayName: userInfo.user.profile.display_name.split(' ')[0],
+        email: userInfo.user.profile.email,
         language: {
             active: "en", // "de"
             lastUsedKey: null // for sassy suggestions based on whatever the user saw previously :)
         },
         troi: {
-            username: null,
+            username: userInfo.user.profile.email.split('@')[0],
             password: null,
             projects: {}, // key: nickname, value: ID
             defaultProject: null // ID

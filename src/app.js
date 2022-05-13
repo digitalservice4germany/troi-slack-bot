@@ -13,11 +13,12 @@ const slackApp = new App({
 const users = {};
 
 // INCOMING messages from Slack
-slackApp.message(async ({ message, say }) => {
+slackApp.message(async ({ message, client, say }) => {
     let user = users[message.user];
     if (!user) {
-        // first time we hear from this user
-        user = buildDefaultUser(message);
+        // first time we hear from this user, get their info
+        const userInfo = await client.users.info({ user: message.user });
+        user = buildDefaultUser(message, userInfo);
         users[user.user] = user;
         schedule.scheduleJob("reminder_" + user.user, buildRecurrenceRule(user.reminder.rule), () => {
             // don't if user paused reminders, it's a public holiday or user is on holiday (API-call to Personio or read out Status in Slack?) TODO
