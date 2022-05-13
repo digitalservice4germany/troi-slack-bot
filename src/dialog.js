@@ -65,8 +65,15 @@ exports.handleMessage = async(user, msg, reschedule) => {
             response = "You are a true hero, your sassy phrase for *" + user.language.lastUsedKey + "* was recorded";
             // GitHub PR to locale files? Or collect these somewhere else? Would be cool to have them instantly available TODO
             break;
+        case "startTracking":
+            // start and stop tracking feature? TODO
+            break;
         case "help":
             response = "This is what you can do with this bot..."; // TODO
+            break;
+        case "dev":
+            // ...
+            response = "dev command";
             break;
     }
 
