@@ -1,6 +1,9 @@
 const schedule = require("node-schedule");
-const de = require('../locale/de.json')
-const en = require('../locale/en.json')
+const moment = require("moment");
+const de = require('../locale/de.json');
+const en = require('../locale/en.json');
+
+const publicHolidaysBerlin = ["26.05.2022", "06.06.2022", "03.10.2022", "26.12.2022"];
 
 exports.lang = (user, key) => {
     let json = user.language.active === "en" ? en : de;
@@ -57,3 +60,7 @@ exports.buildRecurrenceRule = ruleObj => {
     rule.second = ruleObj.second;
     return rule;
 }
+
+exports.todayIsPublicHoliday = () => {
+    return publicHolidaysBerlin.includes(moment(new Date()).format("DD.MM.YYYY"));
+};

@@ -1,7 +1,7 @@
 const { App } = require('@slack/bolt');
 const schedule = require('node-schedule');
 const dialog = require('./dialog')
-const { buildRecurrenceRule, buildDefaultUser, lang } = require("./util");
+const { buildRecurrenceRule, buildDefaultUser, lang, todayIsPublicHoliday} = require("./util");
 
 const slackApp = new App({
     token: process.env.BOT_USER_OAUTH_TOKEN,
@@ -22,6 +22,7 @@ slackApp.message(async ({ message, client, say }) => {
         users[user.user] = user;
         schedule.scheduleJob("reminder_" + user.user, buildRecurrenceRule(user.reminder.rule), () => {
             // don't if user paused reminders, it's a public holiday or user is on holiday (API-call to Personio or read out Status in Slack?) TODO
+            if (todayIsPublicHoliday() || !user.reminder.active) return;
             postMessage(user, lang(user, "motivational_prompt"));
         });
     }
