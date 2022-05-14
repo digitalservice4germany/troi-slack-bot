@@ -15,6 +15,11 @@ const users = {};
 // INCOMING messages from Slack
 slackApp.message(async ({ message, client, say }) => {
     let user = users[message.user];
+    if (user && message.text.toLowerCase() === 'reset') {
+        schedule.cancelJob('reminder_' + user.user);
+        users[message.user] = null;
+        user = null;
+    }
     if (!user) {
         // first time we hear from this user, get their info
         const userInfo = await client.users.info({ user: message.user });
