@@ -1,7 +1,7 @@
 const { App } = require('@slack/bolt');
 const schedule = require('node-schedule');
 const dialog = require('./dialog')
-const { buildRecurrenceRule, buildDefaultUser, lang, todayIsPublicHoliday} = require("./util");
+const { buildRecurrenceRule, buildDefaultUser, lang, todayIsPublicHoliday } = require("./util");
 
 const slackApp = new App({
     token: process.env.BOT_USER_OAUTH_TOKEN,

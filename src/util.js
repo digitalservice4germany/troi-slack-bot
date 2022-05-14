@@ -12,7 +12,7 @@ exports.lang = (user, key) => {
     // distinguish what type of entry it is, could be fix value or array (in that case pick random value) TODO
     let entry = entries[Math.floor(Math.random() * entries.length)];
     entry = entry.replace("<name>", user.displayName);
-    entry = entry.replace("<weekday>", new Date().toLocaleString(user.language.active, { weekday:'long' }));
+    entry = entry.replace("<weekday>", new Date().toLocaleString(user.language.active, { weekday: 'long' }));
     return entry;
 }
 
@@ -21,7 +21,6 @@ exports.buildDefaultUser = (message, userInfo) => {
         user: message.user,
         channel: message.channel,
         displayName: userInfo.user.profile.display_name.split(' ')[0],
-        email: userInfo.user.profile.email,
         language: {
             active: "en", // "de"
             lastUsedKey: null // for sassy suggestions based on whatever the user saw previously :)
