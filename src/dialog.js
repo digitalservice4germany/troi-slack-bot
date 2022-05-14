@@ -25,6 +25,7 @@ exports.handleMessage = async(user, msg, reschedule) => {
             response = "Thanks, username & password saved";
             break;
         case "pause":
+            // after 2 weeks turn off and notify user about it?
             response = "Ok, your reminders are paused until XY"; // TODO
             break;
         case "getTimes":
@@ -52,7 +53,7 @@ exports.handleMessage = async(user, msg, reschedule) => {
             break;
         case "setLanguage":
             user.language.active = parts[1].trim().toLowerCase(); // parse more solid TODO
-            response = "You got it, language is set to " + user.language;
+            response = "You got it, language is set to " + user.language.active;
             break;
         case "sassy":
             if (!user.language.lastUsedKey) {
@@ -70,6 +71,14 @@ exports.handleMessage = async(user, msg, reschedule) => {
             break;
         case "help":
             response = "This is what you can do with this bot..."; // TODO
+            break;
+        case "reset":
+            // TODO
+            response = "Your settings were completely reset";
+            break;
+        case "broadcast":
+            // protect this functionality with a password coming from process.env.? TODO
+            response = "Your message was sent to all BleibTroy users";
             break;
         case "dev":
             // ...
