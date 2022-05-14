@@ -16,10 +16,10 @@ exports.lang = (user, key) => {
     return entry;
 }
 
-exports.buildDefaultUser = (message, userInfo) => {
+exports.buildDefaultUser = (userID, channelID, userInfo) => {
     return {
-        user: message.user,
-        channel: message.channel,
+        user: userID,
+        channel: channelID,
         displayName: userInfo.user.profile.display_name.split(' ')[0],
         language: {
             active: "en", // "de"
