@@ -5,9 +5,12 @@ const en = require('../locale/en.json')
 exports.lang = (user, key) => {
     let json = user.language.active === "en" ? en : de;
     user.language.lastUsedKey = key;
-    let entry = json[key];
+    let entries = json[key];
     // distinguish what type of entry it is, could be fix value or array (in that case pick random value) TODO
-    return entry[Math.floor(Math.random() * entry.length)];
+    let entry = entries[Math.floor(Math.random() * entries.length)];
+    entry = entry.replace("<name>", user.displayName);
+    entry = entry.replace("<weekday>", new Date().toLocaleString(user.language.active, { weekday:'long' }));
+    return entry;
 }
 
 exports.buildDefaultUser = (message, userInfo) => {
