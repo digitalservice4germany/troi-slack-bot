@@ -1,5 +1,6 @@
 const { App } = require("@slack/bolt");
 const schedule = require("node-schedule");
+// const nano = require("nano")("http://admin:admin@localhost:5984"); // npm i nano --save
 const dialog = require("./dialog")
 const { buildRecurrenceRule, buildDefaultUser, lang, todayIsPublicHoliday } = require("./util");
 
@@ -9,6 +10,9 @@ const slackApp = new App({
     socketMode: true,
     appToken: process.env.SOCKET_MODE_TOKEN
 });
+
+// nano.db.create("troi-slack-app");
+// const db = nano.use("troi-slack-app");
 
 const users = {};
 
@@ -38,6 +42,7 @@ async function registerNewUser(eventOrMessage, client, say) {
     // first time we hear from this user, get their info
     const userInfo = await client.users.info({ user: eventOrMessage.user });
     let user = buildDefaultUser(eventOrMessage.user, eventOrMessage.channel, userInfo);
+    // await db.insert(user,user.displayName + "_" + user.user);
     users[user.user] = user;
     schedule.scheduleJob("reminder_" + user.user, buildRecurrenceRule(user.reminder.rule), () => {
         // don't if user paused reminders, it's a public holiday or user is on holiday (API-call to Personio or read out Status in Slack?) TODO

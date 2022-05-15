@@ -1,6 +1,6 @@
+const moment = require("moment");
 const TroiApiService = require("../lib/TroiApiService");
 const { updateStreak } = require("./util");
-const moment = require("moment");
 
 let troiApi;
 
@@ -9,7 +9,7 @@ exports.handleMessage = async(user, msg, reschedule) => {
     // that distorts passwords if they have special characters
     let rawText = msg.blocks[0].elements[0].elements[0].text; // is this path always existing/correct though?
     let parts = rawText.trim().split(" ");
-
+    // use a NLP tokenizer for parsing? Like npm wink-nlp (multilingual) TODO
     let response = null;
     // refactor this to command blocks that can also be iterated over to generate the help message TODO
     switch(parts[0]) {
