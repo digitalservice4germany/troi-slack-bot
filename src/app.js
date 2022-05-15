@@ -1,6 +1,6 @@
-const { App } = require('@slack/bolt');
-const schedule = require('node-schedule');
-const dialog = require('./dialog')
+const { App } = require("@slack/bolt");
+const schedule = require("node-schedule");
+const dialog = require("./dialog")
 const { buildRecurrenceRule, buildDefaultUser, lang, todayIsPublicHoliday } = require("./util");
 
 const slackApp = new App({
@@ -12,15 +12,15 @@ const slackApp = new App({
 
 const users = {};
 
-slackApp.event('app_home_opened', async ({ event, client, say }) => {
+slackApp.event("app_home_opened", async ({ event, client, say }) => {
     if (!users[event.user]) await registerNewUser(event, client, say);
 });
 
 // INCOMING messages from Slack
 slackApp.message(async ({ message, client, say }) => {
     let user = users[message.user];
-    if (user && message.text.toLowerCase() === 'reset') {
-        schedule.cancelJob('reminder_' + user.user);
+    if (user && message.text.toLowerCase() === "reset") {
+        schedule.cancelJob("reminder_" + user.user);
         users[message.user] = null;
         user = null;
     }
@@ -66,5 +66,5 @@ async function postMessage(user, text) {
 
 (async () => {
     await slackApp.start();
-    console.log('BleibTroy is running');
+    console.log("BleibTroy is running");
 })();

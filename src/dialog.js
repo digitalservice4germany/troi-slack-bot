@@ -1,6 +1,6 @@
-const TroiApiService = require('../lib/TroiApiService');
+const TroiApiService = require("../lib/TroiApiService");
 const { updateStreak } = require("./util");
-const moment = require('moment');
+const moment = require("moment");
 
 let troiApi;
 
@@ -8,7 +8,7 @@ exports.handleMessage = async(user, msg, reschedule) => {
     // msg.text is already encoded and "&" turns into "&amp;" for instance
     // that distorts passwords if they have special characters
     let rawText = msg.blocks[0].elements[0].elements[0].text; // is this path always existing/correct though?
-    let parts = rawText.trim().split(' ');
+    let parts = rawText.trim().split(" ");
 
     let response = null;
     switch(parts[0]) {
@@ -21,8 +21,8 @@ exports.handleMessage = async(user, msg, reschedule) => {
             response = "Thanks, password saved";
             break;
         case "login":
-            user.troi.username = parts[1].trim().split('/')[0].trim();
-            user.troi.password = parts[1].trim().split('/')[1].trim();
+            user.troi.username = parts[1].trim().split("/")[0].trim();
+            user.troi.password = parts[1].trim().split("/")[1].trim();
             response = "Thanks, username & password saved";
             break;
         case "pause":

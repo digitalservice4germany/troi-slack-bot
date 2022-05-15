@@ -1,7 +1,7 @@
 const schedule = require("node-schedule");
 const moment = require("moment");
-const de = require('../locale/de.json');
-const en = require('../locale/en.json');
+const de = require("../locale/de.json");
+const en = require("../locale/en.json");
 
 const publicHolidaysBerlin = ["26.05.2022", "06.06.2022", "03.10.2022", "26.12.2022"];
 
@@ -12,7 +12,7 @@ exports.lang = (user, key) => {
     // distinguish what type of entry it is, could be fix value or array (in that case pick random value) TODO
     let entry = entries[Math.floor(Math.random() * entries.length)];
     entry = entry.replace("<name>", user.displayName);
-    entry = entry.replace("<weekday>", new Date().toLocaleString(user.language.active, { weekday: 'long' }));
+    entry = entry.replace("<weekday>", new Date().toLocaleString(user.language.active, { weekday: "long" }));
     return entry;
 }
 
@@ -20,13 +20,13 @@ exports.buildDefaultUser = (userID, channelID, userInfo) => {
     return {
         user: userID,
         channel: channelID,
-        displayName: userInfo.user.profile.display_name.split(' ')[0],
+        displayName: userInfo.user.profile.display_name.split(" ")[0],
         language: {
             active: "en", // "de"
             lastUsedKey: null // for sassy suggestions based on whatever the user saw previously :)
         },
         troi: {
-            username: userInfo.user.profile.email.split('@')[0],
+            username: userInfo.user.profile.email.split("@")[0],
             password: null,
             projects: {}, // key: nickname, value: ID
             defaultProject: null // ID
@@ -89,7 +89,7 @@ exports.updateStreak = user => {
             streakIntact = false;
             break;
         }
-        countingToToday.add(1, 'days');
+        countingToToday.add(1, "days");
     }
     user.stats.currentStreak = streakIntact ? user.stats.currentStreak + 1 : 0;
     return streakIntact;
