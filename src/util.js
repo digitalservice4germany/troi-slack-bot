@@ -31,6 +31,10 @@ exports.buildDefaultUser = (userID, channelID, userInfo) => {
             projects: {}, // key: nickname, value: ID
             defaultProject: null // ID
         },
+        stats: {
+            currentStreak: 0,
+            previousSubmissionDay: null
+        },
         reminder: {
             active: true,
             pausedUntil: null,
@@ -61,5 +65,32 @@ exports.buildRecurrenceRule = ruleObj => {
 }
 
 exports.todayIsPublicHoliday = () => {
-    return publicHolidaysBerlin.includes(moment(new Date()).format("DD.MM.YYYY"));
-};
+    return isPublicToday(moment(new Date()));
+}
+
+const isPublicToday = moment => {
+    return publicHolidaysBerlin.includes(moment.format("DD.MM.YYYY"));
+}
+
+const getAndUpdatePrevSubmissionDay = user => {
+    let prevDayMoment = user.stats.previousSubmissionDay ? moment(user.stats.previousSubmissionDay, "YYYY-MM-DD") : moment();
+    user.stats.previousSubmissionDay = moment().format("YYYY-MM-DD"); // = today
+    return prevDayMoment;
+}
+
+exports.updateStreak = user => {
+    let streakIntact = true;
+    let countingToToday = getAndUpdatePrevSubmissionDay(user).add(1, "days");
+    let today = moment();
+    while (countingToToday.isBefore(today, "day")) {
+        // the streak only stays intact if there is an "excuse" for not submitting for every day between the last submission
+        // date and today - valid excuses for non-submission-days are that it was weekend or that it was a public holiday
+        if (countingToToday.isoWeekday() < 6 && !isPublicToday(countingToToday)) {
+            streakIntact = false;
+            break;
+        }
+        countingToToday.add(1, 'days');
+    }
+    user.stats.currentStreak = streakIntact ? user.stats.currentStreak + 1 : 0;
+    return streakIntact;
+}

@@ -1,4 +1,5 @@
 const TroiApiService = require('../lib/TroiApiService');
+const { updateStreak } = require("./util");
 const moment = require('moment');
 
 let troiApi;
@@ -109,6 +110,8 @@ exports.handleMessage = async(user, msg, reschedule) => {
         let hours = Number.parseFloat(parts[0].substring(0, parts[0].length - 1)); // expects 2.5 and not 2,5 --> support both TODO
         let description = msg.text.substring(parts[0].length + 1);
         await troiApi.postTimeEntry(project, date, hours, description);
+        let streakIntact = updateStreak(user);
+        // include streak intact yes/no into response and tell leaderboard-position in company TODO
         response = "Sweet, your new time entry was added successfully"; // source from locale TODO
     }
 
