@@ -81,6 +81,9 @@ exports.handleMessage = async(user, msg, reschedule) => {
             // protect this functionality with a password coming from process.env.? TODO
             response = "Your message was sent to all BleibTroy users";
             break;
+        case "export":
+            response = "This is all I know about you:\n```" + JSON.stringify(user, null, 4) + "```";
+            break;
         case "dev":
             // ...
             response = "dev command";
