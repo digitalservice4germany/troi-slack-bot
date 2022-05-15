@@ -11,6 +11,7 @@ exports.handleMessage = async(user, msg, reschedule) => {
     let parts = rawText.trim().split(" ");
 
     let response = null;
+    // refactor this to command blocks that can also be iterated over to generate the help message TODO
     switch(parts[0]) {
         case "username":
             user.troi.username = parts[1].trim();
@@ -65,7 +66,8 @@ exports.handleMessage = async(user, msg, reschedule) => {
             let suggestion = rawText.substring(("sassy " + lang + " ").length);
             console.log("sassy", lang, suggestion);
             response = "You are a true hero, your sassy phrase for *" + user.language.lastUsedKey + "* was recorded";
-            // GitHub PR to locale files? Or collect these somewhere else? Would be cool to have them instantly available TODO
+            // GitHub PR to locale files? https://github.com/digitalservice4germany/troi-slack-bot/pulls
+            // Or collect these somewhere else? Would be cool to have them instantly available TODO
             break;
         case "startTracking":
             // start and stop tracking feature? TODO
@@ -83,6 +85,11 @@ exports.handleMessage = async(user, msg, reschedule) => {
             break;
         case "export":
             response = "This is all I know about you:\n```" + JSON.stringify(user, null, 4) + "```";
+            break;
+        case "bug":
+        case "suggestion":
+            // TODO
+            response = "Great, thanks, your issue was submitted to https://github.com/digitalservice4germany/troi-slack-bot/issues";
             break;
         case "dev":
             // ...

@@ -33,7 +33,8 @@ exports.buildDefaultUser = (userID, channelID, userInfo) => {
         },
         stats: {
             currentStreak: 0,
-            previousSubmissionDay: null
+            previousSubmissionDay: null,
+            totalSubmissionDays: 0 // TODO
         },
         reminder: {
             active: true,
