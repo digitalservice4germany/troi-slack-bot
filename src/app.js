@@ -4,6 +4,8 @@ const schedule = require("node-schedule");
 const dialog = require("./dialog")
 const { buildRecurrenceRule, buildDefaultUser, lang, todayIsPublicHoliday } = require("./util");
 
+let troiApi;
+
 const slackApp = new App({
     token: process.env.BOT_USER_OAUTH_TOKEN,
     signingSecret: process.env.SLACK_SIGNING_SECRET,
@@ -49,6 +51,13 @@ async function registerNewUser(eventOrMessage, client, say) {
         if (todayIsPublicHoliday() || !user.reminder.active) return;
         postMessage(user, lang(user, "motivational_prompt"));
     });
+    // user.troi.employeeId = await troiApi.getEmployeeIdForUserName(user.troi.username); TODO
+    /*let projects = await troiApi.getCalculationPositions();
+    if (projects.length === 1) {
+        user.troi.defaultProject = projects[0].id;
+    } else {
+        // ask users to give nicknames for projects TODO
+    }*/
     // don't allow changing of usernames? Instead verify email with Google OAuth? TODO
     // instead of API impersonation, use a PIN that people have to enter with each entry and encrypt the stored password with that? TODO
     await say("Hey there " + user.displayName + ", nice to meet you! I set up the default reminder for you:" +
@@ -73,5 +82,9 @@ async function postMessage(user, text) {
 
 (async () => {
     await slackApp.start();
+    const TroiApiService = await import("troi-library");
+    troiApi = new TroiApiService.default(process.env.TROI_API_URL, process.env.TROI_USERNAME, process.env.TROI_PASSWORD);
+    await troiApi.initialize();
+    console.log("Connection to the Troi API is initialized");
     console.log("BleibTroy is running");
 })();
