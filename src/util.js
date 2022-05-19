@@ -95,3 +95,20 @@ exports.updateStreak = user => {
     user.stats.currentStreak = streakIntact ? user.stats.currentStreak + 1 : 0;
     return streakIntact;
 }
+
+exports.mermaidHTMLwrapper = mermaidMarkdown => {
+    return "<!DOCTYPE html>\n" +
+        "<html lang=\"en\">\n" +
+        "<head>\n" +
+        "    <meta charset=\"UTF-8\">\n" +
+        "    <title>Mermaid</title>\n" +
+        "    <script src=\"node_modules/mermaid/dist/mermaid.min.js\"></script>\n" +
+        "</head>\n" +
+        "<body>\n" +
+        "    <div class=\"mermaid\">\n" +
+        mermaidMarkdown +
+        "    </div>\n" +
+        "    <script>mermaid.initialize({startOnLoad:true});</script>\n" +
+        "</body>\n" +
+        "</html>";
+}

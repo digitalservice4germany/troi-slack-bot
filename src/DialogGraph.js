@@ -20,11 +20,23 @@ class DialogGraph {
         this.nodes[id] = node;
         return node;
     }
+
     addEdge(name, source, target) {
         let id = Object.keys(this.edges).length;
         let edge = new Edge(id, name, source, target);
         this.edges[id] = edge;
         return edge;
+    }
+
+    generateMermaidMarkdown() {
+        let markdown = "graph\n";
+        Object.values(this.edges).forEach(edge =>
+            markdown +=
+                edge.source.id + "(" + edge.source.name + ")" +
+                " -- " + edge.name + " --> " +
+                edge.target.id + "(" + edge.target.name + ")\n"
+        );
+        return markdown;
     }
 }
 
