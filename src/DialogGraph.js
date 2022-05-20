@@ -7,32 +7,34 @@ class DialogGraph {
 
         let setupPhase = this.addNode("SetupPhase",
             "Let's setup some things, it won't take long.");
-        this.addEdge("auto", this.root, setupPhase);
-
         let reminderSetup = this.addNode("ReminderSetup");
-        this.addEdge("2", setupPhase, reminderSetup);
 
-        let determinePositions = this.addNode("DeterminePositions",
+        let identifyPositions = this.addNode("identifyPositions",
             "Alright, let's find out where your time bookings should go. " +
             "I found these positions that you previously booked times on: xyz, is this still accurate or is something missing or meanwhile outdated? " +
             "Ok, I would like to know which projects you are on and then please help me identify the so called \"positions\" within those projects " +
             "that you are booking time on.");
-        this.addEdge("yes", determinePositions, reminderSetup);
+        let suggestPreviouslyUsedPositions = this.addNode("suggestPreviouslyUsedPositions");
 
         let troiSetup = this.addNode("TroiSetup",
             "Are you planning to use me (sometimes) for booking your time in Troi" +
             " or do you only want me to remind you regularly to book your hours (in another tool)?");
+        let determineProjects = this.addNode("determineProjects");
+        let determineRole = this.addNode("determineRole");
+        let determinePositionsWithinProjects = this.addNode("determinePositionsWithinProjects");
+
+        this.addEdge("auto", this.root, setupPhase);
         this.addEdge("1", setupPhase, troiSetup);
-        this.addEdge("yes", troiSetup, determinePositions);
+        this.addEdge("2", setupPhase, reminderSetup);
+
         this.addEdge("no", troiSetup, reminderSetup);
+        this.addEdge("yes", troiSetup, identifyPositions);
 
-        let determineProjects = this.addNode("DetermineProjects");
-        this.addEdge("no", determinePositions, determineProjects);
+        this.addEdge("auto", identifyPositions, suggestPreviouslyUsedPositions);
 
-        let determineRole = this.addNode("DetermineRole");
+        this.addEdge("not sufficient", suggestPreviouslyUsedPositions, determineProjects);
+        this.addEdge("sufficient", suggestPreviouslyUsedPositions, reminderSetup);
         this.addEdge("auto", determineProjects, determineRole);
-
-        let determinePositionsWithinProjects = this.addNode("DeterminePositionsWithinProjects");
         this.addEdge("auto", determineRole, determinePositionsWithinProjects);
     }
 
