@@ -1,18 +1,7 @@
 # 🤖 ⏳ BleibTroy
-Slack bot to help you fill out Troi. Uses the [Bolt](https://github.com/SlackAPI/bolt-js) framework and the [Troi API](https://v2.troi.dev/).
+Slack bot to help you fill out Troi. Uses the [Bolt](https://github.com/SlackAPI/bolt-js) framework and the [troi-library](https://github.com/digitalservice4germany/troi-library) to talk with the [Troi API](https://v2.troi.dev/).
 
-#### 👉 Also check out our other in-house self-built client for Troi: [Achill](https://github.com/digitalservice4germany/achill)
-
-*The first setup step both developers and users have to do. The two later ones are for developers only:*
-
-## Setup Troi
-
-Two things need to happen in your Troi account (it might already be set up correctly):
-- your account needs write-access to the Troi-API, Lisa S. can make that happen as a Troi admin (test: if you can log into Achill you're good)
-- you need to mark your project(s) as favourite, only those will be accessible within Achill and BleibTroy:
-
-![Troi desk screenshot](https://user-images.githubusercontent.com/5141792/167609943-a83b3018-3e06-4a7e-8584-003531e56cbc.png)
-
+#### 👉 Also check out our other self-built clients for Troi: [Achill](https://github.com/digitalservice4germany/achill) and [troi-cli](https://github.com/digitalservice4germany/troi-cli).
 
 ## Setup the Slack app at api.slack.com
 
