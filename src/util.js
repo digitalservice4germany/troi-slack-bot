@@ -28,8 +28,8 @@ exports.buildDefaultUser = (userID, channelID, userInfo) => {
         troi: {
             username: userInfo.user.profile.email.split("@")[0],
             employeeId: null,
-            projects: {}, // key: nickname, value: ID
-            defaultProject: null // ID
+            positions: [], // { id: xy, partOfProject: abc, nickname: null }
+            defaultPosition: null
         },
         stats: {
             currentStreak: 0,

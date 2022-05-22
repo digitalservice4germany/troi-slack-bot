@@ -19,15 +19,15 @@ exports.handleMessage = async(user, msg, reschedule) => {
             response = "Ok, your reminders are paused until XY"; // TODO
             break;
         case "getTimes":
-            if (!user.troi.defaultProject) {
-                response = "I don't have information about your project(s) yet, did you not login yet?";
+            if (!user.troi.defaultPosition) {
+                response = "I don't have information about your position(s) yet";
                 break;
             }
             let endDate = new Date();
             let startDate = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
             response = "TODO";
             /*let entries = await troiApi.getTimeEntries(
-                user.troi.defaultProject,
+                user.troi.defaultPosition,
                 moment(startDate).format("YYYYMMDD"),
                 moment(endDate).format("YYYYMMDD")
             );
@@ -83,11 +83,11 @@ exports.handleMessage = async(user, msg, reschedule) => {
     }
 
     if (parts[0].endsWith("h")) { // add here elaborated fail-safe parsing of all kinds of ways to specify a duration, use https://github.com/agenda/human-interval? TODO
-        let project = user.troi.defaultProject; // deal with multiple projects/nicknames etc. TODO
+        let position = user.troi.defaultPosition; // deal with multiple positions/nicknames etc. TODO
         let date = moment(new Date()).format("YYYY-MM-DD");
         let hours = Number.parseFloat(parts[0].substring(0, parts[0].length - 1)); // expects 2.5 and not 2,5 --> support both TODO
         let description = msg.text.substring(parts[0].length + 1);
-        // await troiApi.postTimeEntry(project, date, hours, description);
+        // await troiApi.postTimeEntry(position, date, hours, description);
         let streakIntact = updateStreak(user);
         // include streak intact yes/no into response and tell leaderboard-position in company TODO
         response = "Sweet, your new time entry was added successfully"; // source from locale TODO
