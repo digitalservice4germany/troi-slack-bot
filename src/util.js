@@ -34,7 +34,7 @@ exports.buildDefaultUser = (userID, channelID, userInfo) => {
         stats: {
             currentStreak: 0,
             latestSubmissionDay: null,
-            totalSubmissionDays: 0 // TODO
+            totalSubmissionDays: 0
         },
         reminder: {
             active: true,
@@ -74,6 +74,7 @@ const isPublicToday = moment => {
 }
 
 const getAndUpdateLatestSubmissionDay = user => {
+    if (!this.userSubmittedToday(user)) user.stats.totalSubmissionDays ++;
     let latestDayMoment = user.stats.latestSubmissionDay ? moment(user.stats.latestSubmissionDay, "YYYY-MM-DD") : moment();
     user.stats.latestSubmissionDay = moment().format("YYYY-MM-DD"); // = today
     return latestDayMoment;
