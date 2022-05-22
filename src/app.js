@@ -22,6 +22,15 @@ slackApp.event("app_home_opened", async ({ event, client, say }) => {
     if (!users[event.user]) await registerNewUser(event, client, say);
 });
 
+slackApp.action(new RegExp('^btn', 'i'), async ({ body, ack, say }) => {
+    let user = users[body.user.id];
+    let actionId = body.actions[0].action_id; // actions array? how can there be more than one in there?
+    let value = body.actions[0].value;
+    console.log("user:", user.displayName, "actionId:", actionId, "value:", value);
+    await ack();
+    await say(`<@${body.user.id}> clicked the button`);
+});
+
 // INCOMING messages from Slack
 slackApp.message(async ({ message, client, say }) => {
     let user = users[message.user];
@@ -45,7 +54,44 @@ slackApp.message(async ({ message, client, say }) => {
 });
 
 async function dev(message, say) {
-    // ...
+    await say({
+        blocks: [
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": `:wave: *Hey there* <@${message.user}>!`
+                },
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "actions",
+                "elements": [
+                    {
+                        "type": "button",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "Button 1",
+                        },
+                        "value": "btn1",
+                        "action_id": "btn1"
+                    },
+                    {
+                        "type": "button",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "Button 2",
+                        },
+                        "value": "btn2",
+                        "action_id": "btn2"
+                    }
+                ]
+            }
+        ],
+        text: "text to be shown in slack notification etc."
+    });
 }
 
 async function registerNewUser(eventOrMessage, client, say) {
