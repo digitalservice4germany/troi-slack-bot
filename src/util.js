@@ -33,7 +33,7 @@ exports.buildDefaultUser = (userID, channelID, userInfo) => {
         },
         stats: {
             currentStreak: 0,
-            previousSubmissionDay: null,
+            latestSubmissionDay: null,
             totalSubmissionDays: 0 // TODO
         },
         reminder: {
@@ -73,15 +73,15 @@ const isPublicToday = moment => {
     return publicHolidaysBerlin.includes(moment.format("DD.MM.YYYY"));
 }
 
-const getAndUpdatePrevSubmissionDay = user => {
-    let prevDayMoment = user.stats.previousSubmissionDay ? moment(user.stats.previousSubmissionDay, "YYYY-MM-DD") : moment();
-    user.stats.previousSubmissionDay = moment().format("YYYY-MM-DD"); // = today
-    return prevDayMoment;
+const getAndUpdateLatestSubmissionDay = user => {
+    let latestDayMoment = user.stats.latestSubmissionDay ? moment(user.stats.latestSubmissionDay, "YYYY-MM-DD") : moment();
+    user.stats.latestSubmissionDay = moment().format("YYYY-MM-DD"); // = today
+    return latestDayMoment;
 }
 
 exports.updateStreak = user => {
     let streakIntact = true;
-    let countingToToday = getAndUpdatePrevSubmissionDay(user).add(1, "days");
+    let countingToToday = getAndUpdateLatestSubmissionDay(user).add(1, "days");
     let today = moment();
     while (countingToToday.isBefore(today, "day")) {
         // the streak only stays intact if there is an "excuse" for not submitting for every day between the last submission
