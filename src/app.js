@@ -34,11 +34,19 @@ slackApp.message(async ({ message, client, say }) => {
         await registerNewUser(message, client, say);
         return;
     }
+    if (message.text === "dev") {
+        await dev(message, say);
+        return;
+    }
     let response = await dialog.handleMessage(user, message,
         () => schedule.rescheduleJob("reminder_" + user.user, buildRecurrenceRule(user.reminder.rule))
     );
     if (response) await say(response);
 });
+
+async function dev(message, say) {
+    // ...
+}
 
 async function registerNewUser(eventOrMessage, client, say) {
     // first time we hear from this user, get their info
@@ -64,6 +72,7 @@ async function registerNewUser(eventOrMessage, client, say) {
         " _every weekday at 17:00_.\n" +
         "From your email-address I derived that your Troi username is *" + user.troi.username + "*. If this" +
         " is not correct, please change it by sending: _username: <your-Troi-username>_");
+    console.log("New user registered: " + user.displayName);
 }
 
 // OUTGOING messages to Slack

@@ -80,10 +80,6 @@ exports.handleMessage = async(user, msg, reschedule) => {
             // TODO
             response = "Great, thanks, your issue was submitted to https://github.com/digitalservice4germany/troi-slack-bot/issues";
             break;
-        case "dev":
-            // ...
-            response = "dev command";
-            break;
     }
 
     if (parts[0].endsWith("h")) { // add here elaborated fail-safe parsing of all kinds of ways to specify a duration, use https://github.com/agenda/human-interval? TODO
