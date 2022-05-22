@@ -79,6 +79,11 @@ const getAndUpdateLatestSubmissionDay = user => {
     return latestDayMoment;
 }
 
+exports.userSubmittedToday = user => {
+    return user.stats.latestSubmissionDay &&
+        moment(user.stats.latestSubmissionDay, "YYYY-MM-DD").isSame(moment(), "day");
+}
+
 exports.updateStreak = user => {
     let streakIntact = true;
     let countingToToday = getAndUpdateLatestSubmissionDay(user).add(1, "days");

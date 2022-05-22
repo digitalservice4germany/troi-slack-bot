@@ -2,7 +2,7 @@ const { App } = require("@slack/bolt");
 const schedule = require("node-schedule");
 // const nano = require("nano")("http://admin:admin@localhost:5984"); // npm i nano --save
 const dialog = require("./dialog")
-const { buildRecurrenceRule, buildDefaultUser, lang, todayIsPublicHoliday } = require("./util");
+const { buildRecurrenceRule, buildDefaultUser, lang, todayIsPublicHoliday, userSubmittedToday } = require("./util");
 
 let troiApi;
 
@@ -101,8 +101,8 @@ async function registerNewUser(eventOrMessage, client, say) {
     // await db.insert(user,user.displayName + "_" + user.user);
     users[user.user] = user;
     schedule.scheduleJob("reminder_" + user.user, buildRecurrenceRule(user.reminder.rule), () => {
-        // don't if user paused reminders, it's a public holiday or user is on holiday (API-call to Personio or read out Status in Slack?) TODO
-        if (todayIsPublicHoliday() || !user.reminder.active) return;
+        // also pause when user is on holiday: API-call to Personio, read out Status in Slack or user has to do manually? TODO
+        if (todayIsPublicHoliday() || !user.reminder.active || userSubmittedToday(user)) return;
         postMessage(user, lang(user, "motivational_prompt"));
     });
     // user.troi.employeeId = await troiApi.getEmployeeIdForUserName(user.troi.username); TODO
