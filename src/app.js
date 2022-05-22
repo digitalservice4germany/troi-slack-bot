@@ -1,6 +1,8 @@
 const { App } = require("@slack/bolt");
 const schedule = require("node-schedule");
-// const nano = require("nano")("http://admin:admin@localhost:5984"); // npm i nano --save
+// const nano = require("nano")("http://admin:admin@localhost:5984"); TODO
+// const { GoogleSpreadsheet } = require("google-spreadsheet"); TODO
+// const git = require("simple-git"); TODO
 const dialog = require("./dialog")
 const { buildRecurrenceRule, buildDefaultUser, lang, todayIsPublicHoliday, userSubmittedToday } = require("./util");
 
