@@ -4,7 +4,7 @@ const { users, registerNewUser } = require("./users");
 exports.handleMessage = async (message, client, say) => {
     let user = users[message.user];
     if (!user) user = await registerNewUser(message, client, say);
-    startMachine(user);
+    startMachine(user, say, { type: "message", payload: message });
     /*if (user && message.text.toLowerCase() === "reset") {
         schedule.cancelJob("reminder_" + user.user);
         users[message.user] = null;
@@ -22,18 +22,18 @@ exports.handleButtonResponse = async (body, ack, say) => {
     let value = body.actions[0].value;
     console.log("user:", user.displayName, "actionId:", actionId, "value:", value);
     await ack();
-    startMachine(user);
+    startMachine(user, say, { type: "button-response", payload: body.actions[0] });
     // deactivate the buttons to avoid user being able to click on them later out of context? TODO
 }
 
 exports.handleAppHomeOpenedEvent = async (event, client, say) => {
     if (users[event.user]) return;
     let user = await registerNewUser(event, client, say);
-    startMachine(user);
+    startMachine(user, say);
 }
 
-const startMachine = user => {
-    const service = xstate.interpret(machine.withContext({ user: user })) // message: message, client: client, say: say
+const startMachine = (user, say, payload) => {
+    const service = xstate.interpret(machine.withContext({ user: user, say: say, payload: payload }))
         .onTransition((state) => {
             console.log("transition to: ", state.value);
         })
@@ -47,11 +47,59 @@ const machine = xstate.createMachine({
     states: {
         init: { on: { NEXT: "welcome" } },
         welcome: {
-            entry: [
-                (context, event) => {
-                    console.log("in the welcome state with user " + context.user.displayName);
-                }
-            ],
+            entry:
+                context => {
+                    console.log("in the WELCOME state with user " + context.user.displayName);
+                    context.say({
+                        blocks: [
+                            {
+                                "type": "section",
+                                "text": {
+                                    "type": "mrkdwn",
+                                    "text": "Hey " + context.user.displayName + " :wave: nice to meet you! Allow me to introduce " +
+                                        "myself. I am *BleibTroy*, your personal time booking assistant :robot_face:" +
+                                        ":hourglass_flowing_sand: I am sure we will have a great time together. But first things first, " +
+                                        "let's find out how you are planning on using me. I can do two things for you:\n• send you " +
+                                        "reminders to book your time :bell:\n• let you actually book time right here, and I'll send " +
+                                        "it to Troi for you :writing_hand:\nNote that you can always also book time directly in Troi " +
+                                        "or in our other in-house tool <https://track-your-time.dev.ds4g.net/|track-your-time>. " +
+                                        "Alright, please make your choice (you can always change this later on) :drum_with_drumsticks:"
+                                },
+                            },
+                            {
+                                "type": "actions",
+                                "elements": [
+                                    {
+                                        "type": "button",
+                                        "text": {
+                                            "type": "plain_text",
+                                            "text": "Both reminders and booking",
+                                        },
+                                        style: "primary",
+                                        "action_id": "btn_both"
+                                    },
+                                    {
+                                        "type": "button",
+                                        "text": {
+                                            "type": "plain_text",
+                                            "text": "Only reminders",
+                                        },
+                                        "action_id": "btn_reminders"
+                                    },
+                                    {
+                                        "type": "button",
+                                        "text": {
+                                            "type": "plain_text",
+                                            "text": "Only booking",
+                                        },
+                                        "action_id": "btn_booking"
+                                    }
+                                ]
+                            }
+                        ],
+                        text: "Welcome! Choose how to use BleibTroy."
+                    }).then(() => context.user.state.current = "welcome");
+                },
             on: {
                 NEXT: {
                     target: "setup"
@@ -59,6 +107,12 @@ const machine = xstate.createMachine({
             }
         },
         setup: {
+            entry:
+                context => {
+                    // make the buttons disappear TODO
+                    console.log("in the SETUP state with user " + context.user.displayName);
+                    console.log("payload", context.payload);
+                },
             on: {
                 NEXT: [
                     {

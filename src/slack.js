@@ -33,7 +33,7 @@ slackApp.message(async ({ message, client, say }) => {
 async function postMessage(user, text) {
     try {
         const result = await slackApp.client.chat.postMessage({
-            token: process.env.BOT_USER_OAUTH_TOKEN,
+            token: config.SLACK_BOT_USER_OAUTH_TOKEN,
             channel: user.channel,
             text: text
         });
@@ -41,45 +41,4 @@ async function postMessage(user, text) {
     } catch (error) {
         console.error(error);
     }
-}
-
-async function dev(message, say) {
-    await say({
-        blocks: [
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": `:wave: *Hey there* <@${message.user}>!`
-                },
-            },
-            {
-                "type": "divider"
-            },
-            {
-                "type": "actions",
-                "elements": [
-                    {
-                        "type": "button",
-                        "text": {
-                            "type": "plain_text",
-                            "text": "Button 1",
-                        },
-                        "value": "btn1",
-                        "action_id": "btn1"
-                    },
-                    {
-                        "type": "button",
-                        "text": {
-                            "type": "plain_text",
-                            "text": "Button 2",
-                        },
-                        "value": "btn2",
-                        "action_id": "btn2"
-                    }
-                ]
-            }
-        ],
-        text: "text to be shown in slack notification etc."
-    });
 }
