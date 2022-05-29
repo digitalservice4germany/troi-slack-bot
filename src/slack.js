@@ -1,9 +1,10 @@
-const { App } = require("@slack/bolt");
 const config = require("../config.json");
+const { App } = require("@slack/bolt");
 const { users, registerNewUser } = require("./users");
 
 exports.startSlackApp = async () => {
     await slackApp.start();
+    console.log("Slack app has started");
 }
 
 const slackApp = new App({

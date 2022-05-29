@@ -1,5 +1,4 @@
 const { startSlackApp } = require("./slack");
-const { users, registerNewUser } = require("./users");
 const { startTroi } = require("./troi");
 // const nano = require("nano")("http://admin:admin@localhost:5984"); TODO
 // const { GoogleSpreadsheet } = require("google-spreadsheet"); TODO
@@ -10,6 +9,5 @@ const { startTroi } = require("./troi");
 (async () => {
     await startSlackApp()
     await startTroi()
-    console.log("Connection to the Troi API is initialized");
-    console.log("BleibTroy is running");
+    console.log("--> BleibTroy is running");
 })();
