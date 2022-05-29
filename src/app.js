@@ -1,3 +1,4 @@
+const config = require('../config.json');
 const { App } = require("@slack/bolt");
 const { users, registerNewUser } = require("./users");
 // const nano = require("nano")("http://admin:admin@localhost:5984"); TODO
@@ -7,10 +8,10 @@ const { users, registerNewUser } = require("./users");
 let troiApi;
 
 const slackApp = new App({
-    token: process.env.BOT_USER_OAUTH_TOKEN,
-    signingSecret: process.env.SLACK_SIGNING_SECRET,
+    token: config.SLACK_BOT_USER_OAUTH_TOKEN,
+    signingSecret: config.SLACK_SIGNING_SECRET,
     socketMode: true,
-    appToken: process.env.SOCKET_MODE_TOKEN
+    appToken: config.SLACK_SOCKET_MODE_TOKEN
 });
 
 // nano.db.create("troi-slack-app");
@@ -110,7 +111,7 @@ async function postMessage(user, text) {
 (async () => {
     await slackApp.start();
     const TroiApiService = await import("troi-library");
-    troiApi = new TroiApiService.default(process.env.TROI_API_URL, process.env.TROI_USERNAME, process.env.TROI_PASSWORD);
+    troiApi = new TroiApiService.default(config.TROI_API_URL, config.TROI_USERNAME, config.TROI_PASSWORD);
     await troiApi.initialize();
     console.log("Connection to the Troi API is initialized");
     console.log("BleibTroy is running");

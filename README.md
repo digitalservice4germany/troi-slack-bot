@@ -24,15 +24,20 @@ The following steps for setting up the Slack app are adapted from [this](https:/
 npm i
 ```
 
+Create `./config.json`:
+```json
+{
+  "TROI_API_URL": "",
+  "TROI_USERNAME": "",
+  "TROI_PASSWORD": "",
+  "SLACK_BOT_USER_OAUTH_TOKEN": "",
+  "SLACK_SIGNING_SECRET": "",
+  "SLACK_SOCKET_MODE_TOKEN": ""
+}
+```
+
 ## Run
 
-```js
-export TROI_API_URL=...
-export TROI_USERNAME=...
-export TROI_PASSWORD=...
-export BOT_USER_OAUTH_TOKEN=...
-export SIGNING_SECRET=...
-export SOCKET_MODE_TOKEN=...
-
-node app.js
+```bash
+npm start
 ```
