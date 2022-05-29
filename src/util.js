@@ -16,47 +16,6 @@ exports.lang = (user, key) => {
     return entry;
 }
 
-exports.buildDefaultUser = (userID, channelID, userInfo) => {
-    return {
-        user: userID,
-        channel: channelID,
-        displayName: userInfo.user.profile.display_name.split(" ")[0],
-        language: {
-            active: "en", // "de"
-            lastUsedKey: null // for sassy suggestions based on whatever the user saw previously :)
-        },
-        troi: {
-            active: null,
-            username: userInfo.user.profile.email.split("@")[0],
-            employeeId: null,
-            positions: [], // { id: xy, partOfProject: abc, nickname: null }
-            defaultPosition: null,
-            stats: {
-                currentStreak: 0,
-                latestSubmissionDay: null,
-                totalSubmissionDays: 0
-            },
-        },
-        reminder: {
-            active: null,
-            pausedUntil: null,
-            rule: {
-                dayOfWeek: {
-                    fixDay: null,
-                    range: {
-                        start: 1,
-                        end: 5, // 1-5 = weekdays, easy way to skip public holidays? TODO
-                        step: null
-                    }
-                },
-                hour: 17,
-                minute: 0,
-                second: 0
-            }
-        }
-    };
-}
-
 exports.buildRecurrenceRule = ruleObj => {
     const rule = new schedule.RecurrenceRule();
     rule.dayOfWeek = new schedule.Range(ruleObj.dayOfWeek.range.start, ruleObj.dayOfWeek.range.end); // this needs some if-else etc. TODO
