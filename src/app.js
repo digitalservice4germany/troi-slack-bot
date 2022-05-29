@@ -1,11 +1,8 @@
 const { App } = require("@slack/bolt");
-const schedule = require("node-schedule");
 const { users, registerNewUser } = require("./users");
 // const nano = require("nano")("http://admin:admin@localhost:5984"); TODO
 // const { GoogleSpreadsheet } = require("google-spreadsheet"); TODO
 // const git = require("simple-git"); TODO
-const dialog = require("./dialog")
-const { buildRecurrenceRule, buildDefaultUser, lang, todayIsPublicHoliday, userSubmittedToday } = require("./util");
 
 let troiApi;
 
@@ -48,9 +45,9 @@ slackApp.message(async ({ message, client, say }) => {
         await dev(message, say);
         return;
     }
-    let response = await dialog.handleMessage(user, message,
-        () => schedule.rescheduleJob("reminder_" + user.user, buildRecurrenceRule(user.reminder.rule))
-    );
+    // let response = await dialog.handleMessage(user, message,
+    //     () => schedule.rescheduleJob("reminder_" + user.user, buildRecurrenceRule(user.reminder.rule))
+    // );
     if (response) await say(response);
 });
 
