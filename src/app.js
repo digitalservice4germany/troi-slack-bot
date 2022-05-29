@@ -27,6 +27,7 @@ slackApp.action(new RegExp('^btn', 'i'), async ({ body, ack, say }) => {
     console.log("user:", user.displayName, "actionId:", actionId, "value:", value);
     await ack();
     await say(`<@${body.user.id}> clicked the button`);
+    // deactivate the buttons to avoid user being able to click on them later out of context? TODO
 });
 
 // INCOMING messages from Slack
