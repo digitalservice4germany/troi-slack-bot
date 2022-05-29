@@ -12,7 +12,8 @@
     "moment": "^2.29.3",
     "node-fetch": "^2.6.7",
     "node-schedule": "^2.1.0",
-    "troi-library": "^0.0.8"
+    "troi-library": "^0.0.8",
+    "xstate": "^4.32.1"
   },
   "repository": {
     "type": "git",
