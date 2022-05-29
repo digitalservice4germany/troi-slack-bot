@@ -4,7 +4,7 @@ const { users, registerNewUser } = require("./users");
 exports.handleMessage = async (message, client, say) => {
     let user = users[message.user];
     if (!user) user = await registerNewUser(message, client, say);
-    startMachine(user, say, { type: "message", payload: message });
+    startMachine(user, say, { type: "message", content: message });
     /*if (user && message.text.toLowerCase() === "reset") {
         schedule.cancelJob("reminder_" + user.user);
         users[message.user] = null;
@@ -16,13 +16,13 @@ exports.handleMessage = async (message, client, say) => {
     if (response) await say(response);*/
 }
 
-exports.handleButtonResponse = async (body, ack, say) => {
+exports.handleButtonResponse = async (body, ack, say, client) => {
     let user = users[body.user.id];
     let actionId = body.actions[0].action_id; // actions array? how can there be more than one in there?
     let value = body.actions[0].value;
     console.log("user:", user.displayName, "actionId:", actionId, "value:", value);
     await ack();
-    startMachine(user, say, { type: "button-response", payload: body.actions[0] });
+    startMachine(user, say, { type: "button-response", content: body, client: client });
     // deactivate the buttons to avoid user being able to click on them later out of context? TODO
 }
 
@@ -109,9 +109,18 @@ const machine = xstate.createMachine({
         setup: {
             entry:
                 context => {
-                    // make the buttons disappear TODO
                     console.log("in the SETUP state with user " + context.user.displayName);
-                    console.log("payload", context.payload);
+
+                    let btnChoice = context.payload.content.actions[0].action_id;
+                    console.log("button clicked:", btnChoice);
+                    // TODO
+
+                    context.payload.client.chat.update({
+                        channel: context.user.channel,
+                        ts: context.payload.content.message.ts,
+                        text: "updated message", // TODO
+                        blocks: []
+                    }).then(() => console.log("Message updated"));
                 },
             on: {
                 NEXT: [

@@ -20,11 +20,12 @@ slackApp.event("app_home_opened", async ({ event, client, say }) => {
     await handleAppHomeOpenedEvent(event, client, say);
 });
 
-slackApp.action(new RegExp('^btn', 'i'), async ({ body, ack, say }) => {
-    await handleButtonResponse(body, ack, say);
+slackApp.action(new RegExp('^btn', 'i'), async ({ body, ack, say, client}) => {
+    await handleButtonResponse(body, ack, say, client);
 });
 
 slackApp.message(async ({ message, client, say }) => {
+    if (message.subtype && message.subtype === "message_changed") return;
     await handleMessage(message, client, say);
 });
 
