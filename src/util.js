@@ -26,18 +26,19 @@ exports.buildDefaultUser = (userID, channelID, userInfo) => {
             lastUsedKey: null // for sassy suggestions based on whatever the user saw previously :)
         },
         troi: {
+            active: null,
             username: userInfo.user.profile.email.split("@")[0],
             employeeId: null,
             positions: [], // { id: xy, partOfProject: abc, nickname: null }
-            defaultPosition: null
-        },
-        stats: {
-            currentStreak: 0,
-            latestSubmissionDay: null,
-            totalSubmissionDays: 0
+            defaultPosition: null,
+            stats: {
+                currentStreak: 0,
+                latestSubmissionDay: null,
+                totalSubmissionDays: 0
+            },
         },
         reminder: {
-            active: true,
+            active: null,
             pausedUntil: null,
             rule: {
                 dayOfWeek: {
