@@ -2,9 +2,9 @@
   "name": "troi-slack-bot",
   "description": "Slack bot to help you fill out Troi",
   "version": "0.0.1",
-  "main": "src/app.js",
+  "main": "src/main.js",
   "scripts": {
-    "start": "cd src && node app.js"
+    "start": "cd src && node main.js"
   },
   "dependencies": {
     "@slack/bolt": "^3.11.0",
