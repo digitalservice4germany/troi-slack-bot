@@ -1,5 +1,5 @@
 
-exports.welcome_text = name => {
+exports.welcome_text = (name, btnChoice) => {
     return {
         "type": "section",
         "text": {
@@ -11,7 +11,8 @@ exports.welcome_text = name => {
                 "reminders to book your time :bell:\n• let you actually book time right here, and I'll send " +
                 "it to Troi for you :writing_hand:\nNote that you can always also book time directly in Troi " +
                 "or in our other in-house tool <https://track-your-time.dev.ds4g.net/|track-your-time>. " +
-                "Alright, please make your choice (you can always change this later on) :drum_with_drumsticks:"
+                "Alright, please make your choice (you can always change this later on) :drum_with_drumsticks:" +
+                (btnChoice ? "\n\n :point_right:  You chose: *" + btnIdToText[btnChoice] + "*" : "")
         }
     }
 }

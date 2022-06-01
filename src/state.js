@@ -77,8 +77,10 @@ const machine = xstate.createMachine({
                     context.payload.client.chat.update({
                         channel: context.user.channel,
                         ts: context.payload.content.message.ts,
-                        text: "updated message", // TODO
-                        blocks: []
+                        blocks: [
+                            welcome_text(context.user.displayName, btnChoice)
+                        ],
+                        text: "Welcome! Choose how to use BleibTroy."
                     }).then(() => console.log("Message updated"));
                 },
             on: {
