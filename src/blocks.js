@@ -1,4 +1,6 @@
 
+exports.welcome_text_short = "Welcome! Choose how to use BleibTroy.";
+
 exports.welcome_text = (name, btnChoice) => {
     return {
         "type": "section",

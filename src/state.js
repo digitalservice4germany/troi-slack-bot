@@ -1,6 +1,6 @@
 const xstate = require("xstate");
 const { users, registerNewUser } = require("./users");
-const { welcome_text, welcome_buttons } = require("./blocks");
+const { welcome_text, welcome_buttons, welcome_text_short } = require("./blocks");
 
 exports.handleMessage = async (message, client, say) => {
     let user = users[message.user];
@@ -56,7 +56,7 @@ const machine = xstate.createMachine({
                             welcome_text(context.user.displayName),
                             welcome_buttons()
                         ],
-                        text: "Welcome! Choose how to use BleibTroy."
+                        text: welcome_text_short
                     }).then(() => context.user.state.current = "welcome");
                 },
             on: {
@@ -80,7 +80,7 @@ const machine = xstate.createMachine({
                         blocks: [
                             welcome_text(context.user.displayName, btnChoice)
                         ],
-                        text: "Welcome! Choose how to use BleibTroy."
+                        text: welcome_text_short
                     }).then(() => console.log("Message updated"));
                 },
             on: {
