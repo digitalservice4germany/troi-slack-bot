@@ -16,35 +16,32 @@ exports.welcome_text = name => {
     }
 }
 
+const btnIdToText = {
+    btn_both: "Both reminders and booking",
+    btn_reminders: "Only reminders",
+    btn_booking: "Only booking",
+}
+
+const buildBtnElement = (btnId, style) => {
+    let el = {
+        "type": "button",
+        "text": {
+            "type": "plain_text",
+            "text": btnIdToText[btnId],
+        },
+        "action_id": btnId
+    };
+    if (style) el.style = style;
+    return el;
+}
+
 exports.welcome_buttons = () => {
     return {
         "type": "actions",
         "elements": [
-            {
-                "type": "button",
-                "text": {
-                    "type": "plain_text",
-                    "text": "Both reminders and booking",
-                },
-                style: "primary",
-                "action_id": "btn_both"
-            },
-            {
-                "type": "button",
-                "text": {
-                    "type": "plain_text",
-                    "text": "Only reminders",
-                },
-                "action_id": "btn_reminders"
-            },
-            {
-                "type": "button",
-                "text": {
-                    "type": "plain_text",
-                    "text": "Only booking",
-                },
-                "action_id": "btn_booking"
-            }
+            buildBtnElement("btn_both", "primary"),
+            buildBtnElement("btn_reminders"),
+            buildBtnElement("btn_booking")
         ]
     }
 }
