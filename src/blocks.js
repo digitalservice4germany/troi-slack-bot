@@ -1,3 +1,4 @@
+// WELCOME
 
 exports.welcome_text_short = "Welcome! Choose how to use BleibTroy.";
 

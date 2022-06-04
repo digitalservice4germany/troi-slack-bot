@@ -38,7 +38,7 @@ const startMachine = (user, say, payload) => {
     // noinspection JSCheckFunctionSignatures
     service = xstate.interpret(machine.withContext({ user: user, say: say, payload: payload, getService }))
         .onTransition((state) => {
-            console.log("transition to: ", state.value);
+            console.log("transition to -->", state.value);
         })
         .start(user.state.current);
     service.send("NEXT");
@@ -70,8 +70,6 @@ const machine = xstate.createMachine({
         setup: {
             entry:
                 context => {
-                    console.log("in the SETUP state with user " + context.user.displayName);
-
                     if (context.payload.type !== "button-response") {
                         context.say("Please click a button first")
                         return;
