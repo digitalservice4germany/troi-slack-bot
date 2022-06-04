@@ -2,7 +2,7 @@
 exports.welcome_text_short = "Welcome! Choose how to use BleibTroy.";
 
 exports.welcome_text = (name, btnChoice) => {
-    return {
+    return [{
         "type": "section",
         "text": {
             "type": "mrkdwn",
@@ -16,7 +16,7 @@ exports.welcome_text = (name, btnChoice) => {
                 "Alright, please make your choice (you can always change this later on) :drum_with_drumsticks:" +
                 (btnChoice ? "\n\n :point_right:  You chose: *" + btnIdToText[btnChoice] + "*" : "")
         }
-    }
+    }]
 }
 
 const btnIdToText = {
@@ -39,12 +39,12 @@ const buildBtnElement = (btnId, style) => {
 }
 
 exports.welcome_buttons = () => {
-    return {
+    return [{
         "type": "actions",
         "elements": [
             buildBtnElement("btn_reminders_and_booking", "primary"),
             buildBtnElement("btn_only_reminders"),
             buildBtnElement("btn_only_booking")
         ]
-    }
+    }]
 }

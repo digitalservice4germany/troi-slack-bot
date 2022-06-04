@@ -44,7 +44,7 @@ const startMachine = (user, say, payload) => {
 }
 
 const machine = xstate.createMachine({
-    id: "toggle",
+    id: "BleibTroyStateMachine",
     initial: "init",
     states: {
         init: { on: { NEXT: "welcome" } },
@@ -54,8 +54,8 @@ const machine = xstate.createMachine({
                     console.log("in the WELCOME state with user " + context.user.displayName);
                     context.say({
                         blocks: [
-                            welcome_text(context.user.displayName),
-                            welcome_buttons()
+                            ...welcome_text(context.user.displayName),
+                            ...welcome_buttons()
                         ],
                         text: welcome_text_short
                     }).then(() => context.user.state.current = "welcome");
@@ -83,7 +83,7 @@ const machine = xstate.createMachine({
                         channel: context.user.channel,
                         ts: context.payload.content.message.ts,
                         blocks: [
-                            welcome_text(context.user.displayName, btnChoice)
+                            ...welcome_text(context.user.displayName, btnChoice)
                         ],
                         text: welcome_text_short
                     }).then(() => {
