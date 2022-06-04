@@ -24,7 +24,6 @@ exports.handleButtonResponse = async (body, ack, say, client) => {
     console.log("user:", user.displayName, "actionId:", actionId, "value:", value);
     await ack();
     startMachine(user, say, { type: "button-response", content: body, client: client });
-    // deactivate the buttons to avoid user being able to click on them later out of context? TODO
 }
 
 exports.handleAppHomeOpenedEvent = async (event, client, say) => {
@@ -69,6 +68,11 @@ const machine = xstate.createMachine({
             entry:
                 context => {
                     console.log("in the SETUP state with user " + context.user.displayName);
+
+                    if (context.payload.type !== "button-response") {
+                        context.say("Please click a button first")
+                        return;
+                    }
 
                     let btnChoice = context.payload.content.actions[0].action_id;
                     console.log("button clicked:", btnChoice);
