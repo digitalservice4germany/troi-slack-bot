@@ -20,9 +20,9 @@ exports.welcome_text = (name, btnChoice) => {
 }
 
 const btnIdToText = {
-    btn_both: "Both reminders and booking",
-    btn_reminders: "Only reminders",
-    btn_booking: "Only booking",
+    btn_reminders_and_booking: "Both reminders and booking",
+    btn_only_reminders: "Only reminders",
+    btn_only_booking: "Only booking",
 }
 
 const buildBtnElement = (btnId, style) => {
@@ -42,9 +42,9 @@ exports.welcome_buttons = () => {
     return {
         "type": "actions",
         "elements": [
-            buildBtnElement("btn_both", "primary"),
-            buildBtnElement("btn_reminders"),
-            buildBtnElement("btn_booking")
+            buildBtnElement("btn_reminders_and_booking", "primary"),
+            buildBtnElement("btn_only_reminders"),
+            buildBtnElement("btn_only_booking")
         ]
     }
 }

@@ -33,7 +33,9 @@ exports.handleAppHomeOpenedEvent = async (event, client, say) => {
 }
 
 const startMachine = (user, say, payload) => {
-    const service = xstate.interpret(machine.withContext({ user: user, say: say, payload: payload }))
+    let service = null;
+    const getService = () => { return service; }
+    service = xstate.interpret(machine.withContext({ user: user, say: say, payload: payload, getService }))
         .onTransition((state) => {
             console.log("transition to: ", state.value);
         })
@@ -75,8 +77,7 @@ const machine = xstate.createMachine({
                     }
 
                     let btnChoice = context.payload.content.actions[0].action_id;
-                    console.log("button clicked:", btnChoice);
-                    // TODO
+                    context.user.state.choices.base_usage = btnChoice.substring(4);
 
                     context.payload.client.chat.update({
                         channel: context.user.channel,
@@ -85,16 +86,21 @@ const machine = xstate.createMachine({
                             welcome_text(context.user.displayName, btnChoice)
                         ],
                         text: welcome_text_short
-                    }).then(() => console.log("Message updated"));
+                    }).then(() => {
+                        context.user.state.current = "setup"
+                        context.getService().send("NEXT"); // is that good style? Don't know how else to trigger the transition
+                    })
                 },
             on: {
                 NEXT: [
                     {
                         target: "troi_setup",
-                        cond: () => { return false }
+                        cond: context => { return context.user.state.choices.base_usage === "only_booking" }
                     },
                     {
-                        target: "reminder_setup"
+                        target: "reminder_setup",
+                        // in case of reminders_and_booking we do reminder first
+                        cond: context => { return context.user.state.choices.base_usage !== "only_booking" }
                     }
                 ]
             }

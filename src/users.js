@@ -13,7 +13,10 @@ exports.buildDefaultUser = (userID, channelID, userInfo) => {
             lastUsedKey: null // for sassy suggestions based on whatever the user saw previously :)
         },
         state: {
-            current: "init"
+            current: "init",
+            choices: {
+                base_usage: null
+            }
         },
         troi: {
             active: null,
