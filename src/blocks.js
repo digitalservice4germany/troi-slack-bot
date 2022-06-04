@@ -54,12 +54,13 @@ exports.welcome_buttons = () => {
 
 exports.reminder_setup_text_short = "Set up reminders"
 
-exports.reminder_setup_text = () => {
+exports.reminder_setup_text = choice => {
     return [{
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": "Set up your reminder schedule"
+            "text": "Set up your reminder schedule" +
+            (choice ? "\n\n :point_right:  You chose: *" + choice + "*" : "")
         }
     }]
 }

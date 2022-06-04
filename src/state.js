@@ -112,7 +112,11 @@ const machine = xstate.createMachine({
                             ...reminder_setup_input_elements()
                         ],
                         text: reminder_setup_text_short
-                    }).then(() => context.user.state.current = "reminder_setup");
+                    }).then(() => {
+                        context.user.state.current = "reminder_setup";
+                        context.user.state.reminder_staging.activeDays = "Monday,Tuesday,Wednesday,Thursday,Friday";
+                        context.user.state.reminder_staging.time = "17:00";
+                    });
                 },
             on: {
                 NEXT: {
@@ -126,7 +130,20 @@ const machine = xstate.createMachine({
                     switch (context.payload.type) {
                         case "button-response":
                             console.log("reminder_staging", context.user.state.reminder_staging)
-                            // TODO
+
+                            context.payload.client.chat.update({
+                                channel: context.user.channel,
+                                ts: context.payload.content.message.ts,
+                                blocks: [
+                                    ...reminder_setup_text(JSON.stringify(context.user.state.reminder_staging)) // TODO
+                                ],
+                                text: reminder_setup_text_short
+                            }).then(() => {
+                                // context.user.state.current = ""
+                            })
+
+                            // write to user.reminder TODO
+
                             break;
                         case "checkbox-response":
                             let str = "";
