@@ -35,6 +35,7 @@ exports.handleAppHomeOpenedEvent = async (event, client, say) => {
 const startMachine = (user, say, payload) => {
     let service = null;
     const getService = () => { return service; }
+    // noinspection JSCheckFunctionSignatures
     service = xstate.interpret(machine.withContext({ user: user, say: say, payload: payload, getService }))
         .onTransition((state) => {
             console.log("transition to: ", state.value);
