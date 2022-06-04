@@ -16,7 +16,8 @@ exports.buildDefaultUser = (userID, channelID, userInfo) => {
             current: "init",
             choices: {
                 base_usage: null
-            }
+            },
+            reminder_staging: {}
         },
         troi: {
             active: null,

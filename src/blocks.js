@@ -49,3 +49,94 @@ exports.welcome_buttons = () => {
         ]
     }]
 }
+
+// REMINDER
+
+exports.reminder_setup_text_short = "Set up reminders"
+
+exports.reminder_setup_text = () => {
+    return [{
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": "Set up your reminder schedule"
+        }
+    }]
+}
+
+const defaultTime = "17:00";
+
+const days = {
+    Monday: true,
+    Tuesday: true,
+    Wednesday: true,
+    Thursday: true,
+    Friday: true,
+    Saturday: false,
+    Sunday: false
+}
+
+const buildCheckboxElement = day => {
+    return {
+        "text": {
+            "type": "plain_text",
+            "text": day
+        },
+        "value": day
+    }
+}
+
+exports.reminder_setup_input_elements = () => {
+    let elements = [
+        {
+            "type": "input",
+            "element": {
+                "type": "timepicker",
+                "initial_time": defaultTime,
+                "placeholder": {
+                    "type": "plain_text",
+                    "text": "Select time"
+                },
+                "action_id": "timepicker_reminder_setup"
+            },
+            "label": {
+                "type": "plain_text",
+                "text": "Remind me at"
+            }
+        },
+        {
+            "type": "input",
+            "element": {
+                "type": "checkboxes",
+                "initial_options": [],
+                "options": [],
+                "action_id": "checkboxes_reminder_setup"
+            },
+            "label": {
+                "type": "plain_text",
+                "text": "on these days:"
+            }
+        },
+        {
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {
+                        "type": "plain_text",
+                        "text": "Save"
+                    },
+                    "style": "primary",
+                    "action_id": "btn_save_reminder_setup"
+                }
+            ]
+        }
+    ];
+
+    for (let key of Object.keys(days)) {
+        elements[1].element.options.push(buildCheckboxElement(key))
+        if (days[key]) elements[1].element.initial_options.push(buildCheckboxElement(key))
+    }
+
+    return elements;
+}

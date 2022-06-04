@@ -1,6 +1,6 @@
 const config = require("../config.json");
 const { App } = require("@slack/bolt");
-const { handleAppHomeOpenedEvent, handleButtonResponse, handleMessage } = require("./state");
+const { handleAppHomeOpenedEvent, handleActionResponse, handleMessage } = require("./state");
 
 exports.startSlackApp = async () => {
     await slackApp.start();
@@ -17,16 +17,26 @@ const slackApp = new App({
 // INCOMING
 
 slackApp.event("app_home_opened", async ({ event, client, say }) => {
-    await handleAppHomeOpenedEvent(event, client, say);
-});
-
-slackApp.action(new RegExp('^btn', 'i'), async ({ body, ack, say, client}) => {
-    await handleButtonResponse(body, ack, say, client);
+    await handleAppHomeOpenedEvent(event, say, client);
 });
 
 slackApp.message(async ({ message, client, say }) => {
     if (message.subtype && message.subtype === "message_changed") return;
-    await handleMessage(message, client, say);
+    await handleMessage(message, say, client);
+});
+
+// Actions
+
+slackApp.action(new RegExp('^btn', 'i'), async ({ body, ack, say, client}) => {
+    await handleActionResponse("button-response", body, ack, say, client);
+});
+
+slackApp.action(new RegExp('^timepicker', 'i'), async ({ body, ack, say, client}) => {
+    await handleActionResponse("timepicker-response", body, ack, say, client);
+});
+
+slackApp.action(new RegExp('^checkboxes', 'i'), async ({ body, ack, say, client}) => {
+    await handleActionResponse("checkbox-response", body, ack, say, client);
 });
 
 // OUTGOING
