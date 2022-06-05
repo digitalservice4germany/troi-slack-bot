@@ -6,6 +6,7 @@ const { welcome_text, welcome_buttons, welcome_text_short,
     radioButtonValueToLabel, daysDef
 } = require("./blocks");
 const { buildRecurrenceRule } = require("./util");
+const config = require("../config.json");
 
 exports.handleMessage = async (message, say, client) => {
     let user = users[message.user];
@@ -196,8 +197,13 @@ const machine = xstate.createMachine({
                             context.user.reminder.schedule.hour = timeParts[0];
                             context.user.reminder.schedule.minute = timeParts[1];
                             schedule.scheduleJob("reminder_" + context.user.id, buildRecurrenceRule(context.user.reminder.schedule), () => {
-                                console.log("reminder fired");
-                                // TODO
+                                context.payload.client.chat.postMessage({
+                                    token: config.SLACK_BOT_USER_OAUTH_TOKEN,
+                                    channel: context.user.channel,
+                                    text: ":bell: Reminder to book time in Troi" // source from google spreadsheet TODO
+                                })
+                                    .then(() => console.log("Sent reminder to " + context.user.id))
+                                    .catch(e => console.error(e))
                             });
                             context.user.language.deOk = context.user.state.reminder_staging.lang === "english_and_german";
                             context.user.state.reminder_staging = {};

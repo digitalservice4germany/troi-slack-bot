@@ -42,18 +42,3 @@ slackApp.action(new RegExp('^checkboxes', 'i'), async ({ body, ack, say, client}
 slackApp.action(new RegExp('^radiobuttons', 'i'), async ({ body, ack, say, client}) => {
     await handleActionResponse("radiobutton-response", body, ack, say, client);
 });
-
-// OUTGOING
-
-async function postMessage(user, text) {
-    try {
-        const result = await slackApp.client.chat.postMessage({
-            token: config.SLACK_BOT_USER_OAUTH_TOKEN,
-            channel: user.channel,
-            text: text
-        });
-        console.log("Sent message to " + user.user);
-    } catch (error) {
-        console.error(error);
-    }
-}
