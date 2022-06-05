@@ -47,14 +47,14 @@ const machine = xstate.createMachine({
         welcome: {
             entry:
                 context => {
-                    console.log("in the WELCOME state with user " + context.user.displayName);
+                    context.user.state.current = "welcome";
                     context.say({
                         blocks: [
                             ...welcome_text(context.user.displayName),
                             ...welcome_buttons()
                         ],
                         text: welcome_text_short
-                    }).then(() => context.user.state.current = "welcome");
+                    });
                 },
             on: {
                 NEXT: {
@@ -65,6 +65,7 @@ const machine = xstate.createMachine({
         setup: {
             entry:
                 context => {
+                    context.user.state.current = "setup"
                     if (context.payload.type !== "button-response") {
                         context.say("Please click a button first")
                         return;
@@ -81,7 +82,6 @@ const machine = xstate.createMachine({
                         ],
                         text: welcome_text_short
                     }).then(() => {
-                        context.user.state.current = "setup"
                         context.getService().send("NEXT"); // is that good style? Don't know how else to trigger the transition
                     })
                 },
@@ -102,6 +102,7 @@ const machine = xstate.createMachine({
         troi_setup: {
             entry:
                 context => {
+                    context.user.state.current = "troi_setup";
                     context.say("In Troi setup")
                 },
             on: {
@@ -112,7 +113,9 @@ const machine = xstate.createMachine({
         },
         troi_setup_receive_settings: {
             entry:
-                context => {},
+                context => {
+                    context.user.state.current = "troi_setup_receive_settings";
+                },
             on: {
                 NEXT: {
                     target: "troi_setup_receive_settings"
@@ -122,6 +125,7 @@ const machine = xstate.createMachine({
         reminder_setup:  {
             entry:
                 context => {
+                    context.user.state.current = "reminder_setup";
                     context.say({
                         blocks: [
                             ...reminder_setup_text(),
@@ -129,7 +133,6 @@ const machine = xstate.createMachine({
                         ],
                         text: reminder_setup_text_short
                     }).then(() => {
-                        context.user.state.current = "reminder_setup";
                         context.user.state.reminder_staging.activeDays = "Monday,Tuesday,Wednesday,Thursday,Friday";
                         context.user.state.reminder_staging.time = "17:00";
                     });
@@ -143,6 +146,7 @@ const machine = xstate.createMachine({
         reminder_setup_receive_settings: {
             entry:
                 context => {
+                    context.user.state.current = "reminder_setup_receive_settings"
                     switch (context.payload.type) {
                         case "button-response":
                             console.log("reminder_staging", context.user.state.reminder_staging)
@@ -155,7 +159,6 @@ const machine = xstate.createMachine({
                                 ],
                                 text: reminder_setup_text_short
                             }).then(() => {
-                                context.user.state.current = "reminder_setup_receive_settings"
                                 context.user.reminder.active = true;
                                 context.getService().send("NEXT");
                             })
@@ -201,6 +204,7 @@ const machine = xstate.createMachine({
         setup_done: {
             entry:
                 context => {
+                    context.user.state.current = "setup_done"
                     context.say("Great, you are done with setting up things!")
                 },
             on: {
@@ -212,7 +216,7 @@ const machine = xstate.createMachine({
         default_listening_state: {
             entry:
                 context => {
-
+                    context.user.state.current = "default_listening_state"
                 },
             on: {
                 NEXT: {
