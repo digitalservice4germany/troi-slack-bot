@@ -67,14 +67,35 @@ exports.reminder_setup_text = choice => {
 
 const defaultTime = "17:00";
 
-const days = {
-    Monday: true,
-    Tuesday: true,
-    Wednesday: true,
-    Thursday: true,
-    Friday: true,
-    Saturday: false,
-    Sunday: false
+exports.daysDef = {
+    Monday: {
+        default: true,
+        index: 1
+    },
+    Tuesday: {
+        default: true,
+        index: 2
+    },
+    Wednesday: {
+        default: true,
+        index: 3
+    },
+    Thursday: {
+        default: true,
+        index: 4
+    },
+    Friday: {
+        default: true,
+        index: 5
+    },
+    Saturday: {
+        default: false,
+        index: 6
+    },
+    Sunday: {
+        default: false,
+        index: 0
+    }
 }
 
 const buildCheckboxElement = day => {
@@ -173,9 +194,9 @@ exports.reminder_setup_input_elements = () => {
         }
     ];
 
-    for (let key of Object.keys(days)) {
+    for (let key of Object.keys(this.daysDef)) {
         elements[1].element.options.push(buildCheckboxElement(key))
-        if (days[key]) elements[1].element.initial_options.push(buildCheckboxElement(key))
+        if (this.daysDef[key].default) elements[1].element.initial_options.push(buildCheckboxElement(key))
     }
 
     return elements;

@@ -1,9 +1,11 @@
 const xstate = require("xstate");
+const schedule = require("node-schedule");
 const { users, registerNewUser } = require("./users");
 const { welcome_text, welcome_buttons, welcome_text_short,
     reminder_setup_text_short, reminder_setup_text, reminder_setup_input_elements,
-    radioButtonValueToLabel
+    radioButtonValueToLabel, daysDef
 } = require("./blocks");
+const { buildRecurrenceRule } = require("./util");
 
 exports.handleMessage = async (message, say, client) => {
     let user = users[message.user];
@@ -185,7 +187,19 @@ const machine = xstate.createMachine({
                                 context.getService().send("NEXT");
                             })
 
-                            // write the rest and schedule the reminder TODO
+                            let arr = [];
+                            for (let day of days) {
+                                arr.push(daysDef[day].index);
+                            }
+                            context.user.reminder.schedule.dayOfWeek = arr;
+                            let timeParts = context.user.state.reminder_staging.time.split(":");
+                            context.user.reminder.schedule.hour = timeParts[0];
+                            context.user.reminder.schedule.minute = timeParts[1];
+                            context.user.state.reminder_staging = {};
+                            schedule.scheduleJob("reminder_" + context.user.id, buildRecurrenceRule(context.user.reminder.schedule), () => {
+                                console.log("reminder fired");
+                                // TODO
+                            });
 
                             break;
                         case "checkbox-response":

@@ -16,12 +16,11 @@ exports.lang = (user, key) => {
     return entry;
 }
 
-exports.buildRecurrenceRule = ruleObj => {
+exports.buildRecurrenceRule = scheduleDef => {
     const rule = new schedule.RecurrenceRule();
-    rule.dayOfWeek = new schedule.Range(ruleObj.dayOfWeek.range.start, ruleObj.dayOfWeek.range.end); // this needs some if-else etc. TODO
-    rule.hour = ruleObj.hour;
-    rule.minute = ruleObj.minute;
-    rule.second = ruleObj.second;
+    rule.dayOfWeek = scheduleDef.dayOfWeek;
+    rule.hour = scheduleDef.hour;
+    rule.minute = scheduleDef.minute;
     return rule;
 }
 

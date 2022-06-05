@@ -1,5 +1,4 @@
-const { buildRecurrenceRule, todayIsPublicHoliday, userSubmittedToday, lang } = require("./util");
-const schedule = require("node-schedule");
+const { buildRecurrenceRule, todayIsPublicHoliday, userSubmittedToday } = require("./util");
 
 exports.users = {};
 
@@ -9,8 +8,7 @@ exports.buildDefaultUser = (userID, channelID, userInfo) => {
         channel: channelID,
         displayName: userInfo.user.profile.display_name.split(" ")[0],
         language: {
-            active: "en", // "de"
-            lastUsedKey: null // for sassy suggestions based on whatever the user saw previously :)
+            active: "en", // no main language switch supported for now
         },
         state: {
             current: "init",
@@ -34,18 +32,10 @@ exports.buildDefaultUser = (userID, channelID, userInfo) => {
         reminder: {
             active: null,
             pausedUntil: null,
-            rule: {
-                dayOfWeek: {
-                    fixDay: null,
-                    range: {
-                        start: 1,
-                        end: 5, // 1-5 = weekdays, easy way to skip public holidays? TODO
-                        step: null
-                    }
-                },
+            schedule: {
+                dayOfWeek: [1,2,3,4,5],
                 hour: 17,
-                minute: 0,
-                second: 0
+                minute: 0
             }
         }
     };
