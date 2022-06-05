@@ -39,6 +39,10 @@ slackApp.action(new RegExp('^checkboxes', 'i'), async ({ body, ack, say, client}
     await handleActionResponse("checkbox-response", body, ack, say, client);
 });
 
+slackApp.action(new RegExp('^radiobuttons', 'i'), async ({ body, ack, say, client}) => {
+    await handleActionResponse("radiobutton-response", body, ack, say, client);
+});
+
 // OUTGOING
 
 async function postMessage(user, text) {

@@ -155,6 +155,9 @@ const machine = xstate.createMachine({
                         case "timepicker-response":
                             context.user.state.reminder_staging.time = context.payload.content.actions[0].selected_time;
                             break;
+                        case "radiobutton-response":
+                            context.user.state.reminder_staging.lang = context.payload.content.actions[0].selected_option.value;
+                            break;
                         default:
                             context.say("Please click save first")
                             return;

@@ -59,7 +59,7 @@ exports.reminder_setup_text = choice => {
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": "Set up your reminder schedule" +
+            "text": "Let's configure your reminders:" +
             (choice ? "\n\n :point_right:  You chose: *" + choice + "*" : "")
         }
     }]
@@ -116,6 +116,40 @@ exports.reminder_setup_input_elements = () => {
             "label": {
                 "type": "plain_text",
                 "text": "on these days:"
+            }
+        },
+        {
+            "type": "input",
+            "element": {
+                "type": "radio_buttons",
+                "initial_option": {
+                    "text": {
+                        "type": "plain_text",
+                        "text": "English and German"
+                    },
+                    "value": "english-and-german"
+                },
+                "options": [
+                    {
+                        "text": {
+                            "type": "plain_text",
+                            "text": "English and German"
+                        },
+                        "value": "english-and-german"
+                    },
+                    {
+                        "text": {
+                            "type": "plain_text",
+                            "text": "Only English"
+                        },
+                        "value": "only-english"
+                    }
+                ],
+                "action_id": "radiobuttons_reminder_language"
+            },
+            "label": {
+                "type": "plain_text",
+                "text": "Language of reminders"
             }
         },
         {
