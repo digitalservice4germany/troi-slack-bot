@@ -9,6 +9,7 @@ exports.buildDefaultUser = (userID, channelID, userInfo) => {
         displayName: userInfo.user.profile.display_name.split(" ")[0],
         language: {
             active: "en", // no main language switch supported for now
+            deOk: true // German is also ok
         },
         state: {
             current: "init",

@@ -195,12 +195,12 @@ const machine = xstate.createMachine({
                             let timeParts = context.user.state.reminder_staging.time.split(":");
                             context.user.reminder.schedule.hour = timeParts[0];
                             context.user.reminder.schedule.minute = timeParts[1];
-                            context.user.state.reminder_staging = {};
                             schedule.scheduleJob("reminder_" + context.user.id, buildRecurrenceRule(context.user.reminder.schedule), () => {
                                 console.log("reminder fired");
                                 // TODO
                             });
-
+                            context.user.language.deOk = context.user.state.reminder_staging.lang === "english_and_german";
+                            context.user.state.reminder_staging = {};
                             break;
                         case "checkbox-response":
                             let str = "";
