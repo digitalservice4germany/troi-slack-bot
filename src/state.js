@@ -5,17 +5,14 @@ const { welcome_text, welcome_buttons, welcome_text_short,
 
 exports.handleMessage = async (message, say, client) => {
     let user = users[message.user];
-    if (!user) user = await registerNewUser(message, client, say);
-    startMachine(user, say, { type: "message", content: message });
-    /*if (user && message.text.toLowerCase() === "reset") {
-        schedule.cancelJob("reminder_" + user.user);
+    if (user && message.text.toLowerCase() === "reset") {
+        // schedule.cancelJob("reminder_" + user.user);
         users[message.user] = null;
         user = null;
     }
-    let response = await dialog.handleMessage(user, message,
-        () => schedule.rescheduleJob("reminder_" + user.user, buildRecurrenceRule(user.reminder.rule))
-    );
-    if (response) await say(response);*/
+    if (!user) user = await registerNewUser(message, client, say);
+    startMachine(user, say, { type: "message", content: message });
+    // schedule.rescheduleJob("reminder_" + user.user, buildRecurrenceRule(user.reminder.rule))
 }
 
 exports.handleActionResponse = async (type, body, ack, say, client) => {
