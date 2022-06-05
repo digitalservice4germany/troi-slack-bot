@@ -87,6 +87,11 @@ const buildCheckboxElement = day => {
     }
 }
 
+exports.radioButtonValueToLabel = {
+    english_and_german: "English and German",
+    only_english: "Only English"
+}
+
 exports.reminder_setup_input_elements = () => {
     let elements = [
         {
@@ -125,24 +130,24 @@ exports.reminder_setup_input_elements = () => {
                 "initial_option": {
                     "text": {
                         "type": "plain_text",
-                        "text": "English and German"
+                        "text": this.radioButtonValueToLabel.english_and_german
                     },
-                    "value": "english-and-german"
+                    "value": "english_and_german"
                 },
                 "options": [
                     {
                         "text": {
                             "type": "plain_text",
-                            "text": "English and German"
+                            "text": this.radioButtonValueToLabel.english_and_german
                         },
-                        "value": "english-and-german"
+                        "value": "english_and_german"
                     },
                     {
                         "text": {
                             "type": "plain_text",
-                            "text": "Only English"
+                            "text": this.radioButtonValueToLabel.only_english
                         },
-                        "value": "only-english"
+                        "value": "only_english"
                     }
                 ],
                 "action_id": "radiobuttons_reminder_language"

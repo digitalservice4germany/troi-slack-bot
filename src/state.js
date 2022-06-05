@@ -1,7 +1,9 @@
 const xstate = require("xstate");
 const { users, registerNewUser } = require("./users");
 const { welcome_text, welcome_buttons, welcome_text_short,
-    reminder_setup_text_short, reminder_setup_text, reminder_setup_input_elements } = require("./blocks");
+    reminder_setup_text_short, reminder_setup_text, reminder_setup_input_elements,
+    radioButtonValueToLabel
+} = require("./blocks");
 
 exports.handleMessage = async (message, say, client) => {
     let user = users[message.user];
@@ -145,6 +147,7 @@ const machine = xstate.createMachine({
                     }).then(() => {
                         context.user.state.reminder_staging.activeDays = "Monday,Tuesday,Wednesday,Thursday,Friday";
                         context.user.state.reminder_staging.time = "17:00";
+                        context.user.state.reminder_staging.lang = "english_and_german";
                     });
                 },
             on: {
@@ -161,13 +164,20 @@ const machine = xstate.createMachine({
                     context.user.state.current = "reminder_setup_receive_settings"
                     switch (context.payload.type) {
                         case "button-response":
-                            console.log("reminder_staging", context.user.state.reminder_staging)
+                            let choiceTxt = "";
+                            let days = context.user.state.reminder_staging.activeDays.split(",");
+                            for (let i = 0; i < days.length - 1; i++) {
+                                choiceTxt += ", " + days[i];
+                            }
+                            choiceTxt = "Every " + choiceTxt.substring(2) + (days.length === 1 ? "" : " and ") + days[days.length - 1];
+                            choiceTxt += " at " + context.user.state.reminder_staging.time + ".";
+                            choiceTxt += " Language is set to: " + radioButtonValueToLabel[context.user.state.reminder_staging.lang] + ".";
 
                             context.payload.client.chat.update({
                                 channel: context.user.channel,
                                 ts: context.payload.content.message.ts,
                                 blocks: [
-                                    ...reminder_setup_text(JSON.stringify(context.user.state.reminder_staging)) // TODO
+                                    ...reminder_setup_text(choiceTxt)
                                 ],
                                 text: reminder_setup_text_short
                             }).then(() => {
