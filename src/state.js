@@ -102,7 +102,26 @@ const machine = xstate.createMachine({
                 ]
             }
         },
-        troi_setup: {},
+        troi_setup: {
+            entry:
+                context => {
+                    context.say("In Troi setup")
+                },
+            on: {
+                NEXT: {
+                    target: "troi_setup_receive_settings"
+                }
+            }
+        },
+        troi_setup_receive_settings: {
+            entry:
+                context => {},
+            on: {
+                NEXT: {
+                    target: "troi_setup_receive_settings"
+                }
+            }
+        },
         reminder_setup:  {
             entry:
                 context => {
@@ -139,10 +158,12 @@ const machine = xstate.createMachine({
                                 ],
                                 text: reminder_setup_text_short
                             }).then(() => {
-                                // context.user.state.current = ""
+                                context.user.state.current = "reminder_setup_receive_settings"
+                                context.user.reminder.active = true;
+                                context.getService().send("NEXT");
                             })
 
-                            // write to user.reminder TODO
+                            // write the rest and schedule the reminder TODO
 
                             break;
                         case "checkbox-response":
@@ -164,8 +185,41 @@ const machine = xstate.createMachine({
                     }
                 },
             on: {
+                NEXT: [
+                    {
+                        target: "reminder_setup_receive_settings",
+                        cond: context => { return !context.user.reminder.active }
+                    },
+                    {
+                        target: "troi_setup",
+                        cond: context => { return context.user.reminder.active && context.user.state.choices.base_usage !== "only_reminders" }
+                    },
+                    {
+                        target: "setup_done",
+                        cond: context => { return context.user.reminder.active && context.user.state.choices.base_usage === "only_reminders" }
+                    }
+                ]
+            }
+        },
+        setup_done: {
+            entry:
+                context => {
+                    context.say("Great, you are done with setting up things!")
+                },
+            on: {
                 NEXT: {
-                    target: "reminder_setup_receive_settings"
+                    target: "default_listening_state"
+                }
+            }
+        },
+        default_listening_state: {
+            entry:
+                context => {
+
+                },
+            on: {
+                NEXT: {
+                    target: "default_listening_state"
                 }
             }
         }
