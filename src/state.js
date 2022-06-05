@@ -43,7 +43,11 @@ const machine = xstate.createMachine({
     id: "BleibTroyStateMachine",
     initial: "init",
     states: {
+
+        // --------------- INIT ---------------
         init: { on: { NEXT: "welcome" } },
+
+        // --------------- WELCOME ---------------
         welcome: {
             entry:
                 context => {
@@ -62,6 +66,8 @@ const machine = xstate.createMachine({
                 }
             }
         },
+
+        // --------------- SETUP ---------------
         setup: {
             entry:
                 context => {
@@ -99,6 +105,8 @@ const machine = xstate.createMachine({
                 ]
             }
         },
+
+        // --------------- TROI_SETUP ---------------
         troi_setup: {
             entry:
                 context => {
@@ -122,6 +130,8 @@ const machine = xstate.createMachine({
                 }
             }
         },
+
+        // --------------- REMINDER_SETUP ---------------
         reminder_setup:  {
             entry:
                 context => {
@@ -143,6 +153,8 @@ const machine = xstate.createMachine({
                 }
             }
         },
+
+        // --------------- REMINDER_SETUP_RECEIVE_SETTINGS ---------------
         reminder_setup_receive_settings: {
             entry:
                 context => {
@@ -201,6 +213,8 @@ const machine = xstate.createMachine({
                 ]
             }
         },
+
+        // --------------- SETUP_DONE ---------------
         setup_done: {
             entry:
                 context => {
@@ -213,6 +227,8 @@ const machine = xstate.createMachine({
                 }
             }
         },
+
+        // --------------- DEFAULT_LISTENING_STATE ---------------
         default_listening_state: {
             entry:
                 context => {
