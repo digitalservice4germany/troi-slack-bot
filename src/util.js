@@ -25,10 +25,10 @@ exports.buildRecurrenceRule = scheduleDef => {
 }
 
 exports.todayIsPublicHoliday = () => {
-    return isPublicToday(moment(new Date()));
+    return isPublicHolidayToday(moment(new Date()));
 }
 
-const isPublicToday = moment => {
+const isPublicHolidayToday = moment => {
     return publicHolidaysBerlin.includes(moment.format("DD.MM.YYYY"));
 }
 
@@ -51,7 +51,7 @@ exports.updateStreak = user => {
     while (countingToToday.isBefore(today, "day")) {
         // the streak only stays intact if there is an "excuse" for not submitting for every day between the last submission
         // date and today - valid excuses for non-submission-days are that it was weekend or that it was a public holiday
-        if (countingToToday.isoWeekday() < 6 && !isPublicToday(countingToToday)) {
+        if (countingToToday.isoWeekday() < 6 && !isPublicHolidayToday(countingToToday)) {
             streakIntact = false;
             break;
         }

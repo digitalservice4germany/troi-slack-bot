@@ -1,4 +1,3 @@
-const { buildRecurrenceRule, todayIsPublicHoliday, userSubmittedToday } = require("./util");
 
 exports.users = {};
 
@@ -32,7 +31,7 @@ exports.buildDefaultUser = (userID, channelID, userInfo) => {
         },
         reminder: {
             active: null,
-            pausedUntil: null,
+            // pausedUntil: null, TODO
             schedule: {
                 dayOfWeek: [1,2,3,4,5],
                 hour: 17,
@@ -48,12 +47,7 @@ exports.registerNewUser = async (eventOrMessage, client, say) => {
     this.users[user.id] = user;
     console.log("New user registered: " + user.displayName);
     return user;
-    /*schedule.scheduleJob("reminder_" + user.user, buildRecurrenceRule(user.reminder.rule), () => {
-        // also pause when user is on holiday: API-call to Personio, read out Status in Slack or user has to do manually? TODO
-        if (todayIsPublicHoliday() || !user.reminder.active || userSubmittedToday(user)) return;
-        postMessage(user, lang(user, "motivational_prompt"));
-    });
-    user.troi.employeeId = await troiApi.getEmployeeIdForUserName(user.troi.username); TODO
+    /*user.troi.employeeId = await troiApi.getEmployeeIdForUserName(user.troi.username); TODO
     let projects = await troiApi.getCalculationPositions();
     if (projects.length === 1) {
         user.troi.defaultProject = projects[0].id;

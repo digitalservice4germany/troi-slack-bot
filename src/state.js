@@ -5,7 +5,7 @@ const { welcome_text, welcome_buttons, welcome_text_short,
     reminder_setup_text_short, reminder_setup_text, reminder_setup_input_elements,
     radioButtonValueToLabel, daysDef
 } = require("./blocks");
-const { buildRecurrenceRule } = require("./util");
+const { buildRecurrenceRule, todayIsPublicHoliday, userSubmittedToday } = require("./util");
 const config = require("../config.json");
 
 exports.handleMessage = async (message, say, client) => {
@@ -197,6 +197,7 @@ const machine = xstate.createMachine({
                             context.user.reminder.schedule.hour = timeParts[0];
                             context.user.reminder.schedule.minute = timeParts[1];
                             schedule.scheduleJob("reminder_" + context.user.id, buildRecurrenceRule(context.user.reminder.schedule), () => {
+                                if (!context.user.reminder.active || todayIsPublicHoliday() || userSubmittedToday(context.user)) return;
                                 context.payload.client.chat.postMessage({
                                     token: config.SLACK_BOT_USER_OAUTH_TOKEN,
                                     channel: context.user.channel,
