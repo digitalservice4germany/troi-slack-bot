@@ -1,7 +1,5 @@
-mermaid.html
 .DS_STORE
 .idea/
 node_modules/
 package-lock.json
 config.json
-_local/
