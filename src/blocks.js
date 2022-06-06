@@ -10,9 +10,9 @@ exports.welcome_text = (name, btnChoice) => {
             "text": "Hey " + name + " :wave: nice to meet you! Allow me to introduce " +
                 "myself. I am *BleibTroy*, your personal time booking assistant :robot_face:" +
                 ":hourglass_flowing_sand: I am sure we will have a great time together. But first things first, " +
-                "let's find out how you are planning on using me. I can do two things for you:\n• send you " +
+                "let's find out how you are planning on using me. I can do two things for you:\n\n• send you " +
                 "reminders to book your time :bell:\n• let you actually book time right here, and I'll send " +
-                "it to Troi for you :writing_hand:\nNote that you can always also book time directly in Troi " +
+                "it to Troi for you :writing_hand:\n\nNote that you can always also book time directly in Troi " +
                 "or in our other in-house tool <https://track-your-time.dev.ds4g.net/|track-your-time>. " +
                 "Alright, please make your choice (you can always change this later on) :drum_with_drumsticks:" +
                 (btnChoice ? "\n\n :point_right:  You chose: *" + btnIdToText[btnChoice] + "*" : "")
@@ -200,4 +200,36 @@ exports.reminder_setup_input_elements = () => {
     }
 
     return elements;
+}
+
+// TROI
+
+exports.troi_setup_text_short = "Set up Troi"
+
+exports.troi_setup_text = () => {
+    return [{
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": "Alright, there is just one thing I need your help with before you can start booking " +
+                "your time in Troi with me. And that is to find out which so called _position(s)_ you are booking onto. I need " +
+                "the IDs of those. Unfortunately I can't access positions you might have marked as favorites directly in Troi. " +
+                "I can guide you through a search process to identify those positions. However, before we resort to " +
+                " that there is two things we can try that are a bit faster: " +
+                "\n\n• I can check on which positions you booked previously" +
+                "\n• You can see a position ID when hovering the mouse over a position title in the " +
+                "<https://track-your-time.dev.ds4g.net/|track-your-time> tool or under _Stundenerfassung_ in Troi (it " +
+                "says _Suchnummer: K123_ --> _123_ is the position ID in this case)"
+        }
+    }]
+}
+
+exports.troi_setup_findings = user => {
+    return [{
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": "For your Troi username _" + user.troi.username + "_ I found..." // TODO
+        }
+    }]
 }

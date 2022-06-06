@@ -13,3 +13,7 @@ exports.startTroi = async () => {
     await troiApi.initialize();
     console.log("Connection to the Troi API is initialized");
 }
+
+exports.storeEmployeeId = async (user) => {
+    user.troi.employeeId = await troiApi.getEmployeeIdForUsername(user.troi.username);
+}
