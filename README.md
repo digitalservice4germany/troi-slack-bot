@@ -28,6 +28,7 @@ Create `./config.json`:
 ```json
 {
   "TROI_API_URL": "",
+  "TROI_CLIENT_NAME": "",
   "TROI_USERNAME": "",
   "TROI_PASSWORD": "",
   "SLACK_BOT_USER_OAUTH_TOKEN": "",
