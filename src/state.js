@@ -139,27 +139,28 @@ const machine = xstate.createMachine({
         reminder_setup_receive_settings: {
             entry:
                 context => {
-                    context.user.state.current = "reminder_setup_receive_settings"
+                    let user = context.user;
+                    user.state.current = "reminder_setup_receive_settings"
                     switch (context.payload.type) {
                         case "button-response":
                             let choiceTxt = "";
-                            let days = context.user.state.reminder_staging.activeDays.split(",");
+                            let days = user.state.reminder_staging.activeDays.split(",");
                             for (let i = 0; i < days.length - 1; i++) {
                                 choiceTxt += ", " + days[i];
                             }
                             choiceTxt = "Every " + choiceTxt.substring(2) + (days.length === 1 ? "" : " and ") + days[days.length - 1];
-                            choiceTxt += " at " + context.user.state.reminder_staging.time + ".";
-                            choiceTxt += " Language is set to: " + radioButtonValueToLabel[context.user.state.reminder_staging.lang] + ".";
+                            choiceTxt += " at " + user.state.reminder_staging.time + ".";
+                            choiceTxt += " Language is set to: " + radioButtonValueToLabel[user.state.reminder_staging.lang] + ".";
 
                             context.payload.client.chat.update({
-                                channel: context.user.channel,
+                                channel: user.channel,
                                 ts: context.payload.content.message.ts,
                                 blocks: [
                                     ...reminder_setup_text(choiceTxt)
                                 ],
                                 text: reminder_setup_text_short
                             }).then(() => {
-                                context.user.reminder.active = true;
+                                user.reminder.active = true;
                                 context.getService().send("NEXT");
                             })
 
@@ -167,35 +168,35 @@ const machine = xstate.createMachine({
                             for (let day of days) {
                                 arr.push(daysDef[day].index);
                             }
-                            context.user.reminder.schedule.dayOfWeek = arr;
-                            let timeParts = context.user.state.reminder_staging.time.split(":");
-                            context.user.reminder.schedule.hour = timeParts[0];
-                            context.user.reminder.schedule.minute = timeParts[1];
-                            schedule.scheduleJob("reminder_" + context.user.id, buildRecurrenceRule(context.user.reminder.schedule), () => {
-                                if (!context.user.reminder.active || todayIsPublicHoliday() || userSubmittedToday(context.user)) return;
+                            user.reminder.schedule.dayOfWeek = arr;
+                            let timeParts = user.state.reminder_staging.time.split(":");
+                            user.reminder.schedule.hour = timeParts[0];
+                            user.reminder.schedule.minute = timeParts[1];
+                            schedule.scheduleJob("reminder_" + user.id, buildRecurrenceRule(user.reminder.schedule), () => {
+                                if (!user.reminder.active || todayIsPublicHoliday() || userSubmittedToday(user)) return;
                                 context.payload.client.chat.postMessage({
                                     token: config.SLACK_BOT_USER_OAUTH_TOKEN,
-                                    channel: context.user.channel,
+                                    channel: user.channel,
                                     text: ":bell: Reminder to book time in Troi" // source from google spreadsheet TODO
                                 })
-                                    .then(() => console.log("Sent reminder to " + context.user.id))
+                                    .then(() => console.log("Sent reminder to " + user.id))
                                     .catch(e => console.error(e))
                             });
-                            context.user.language.deOk = context.user.state.reminder_staging.lang === "english_and_german";
-                            context.user.state.reminder_staging = {};
+                            user.language.deOk = user.state.reminder_staging.lang === "english_and_german";
+                            user.state.reminder_staging = {};
                             break;
                         case "checkbox-response":
                             let str = "";
                             for (let dayEl of context.payload.content.actions[0].selected_options) {
                                 str += "," + dayEl.value;
                             }
-                            context.user.state.reminder_staging.activeDays = str.substring(1);
+                            user.state.reminder_staging.activeDays = str.substring(1);
                             break;
                         case "timepicker-response":
-                            context.user.state.reminder_staging.time = context.payload.content.actions[0].selected_time;
+                            user.state.reminder_staging.time = context.payload.content.actions[0].selected_time;
                             break;
                         case "radiobutton-response":
-                            context.user.state.reminder_staging.lang = context.payload.content.actions[0].selected_option.value;
+                            user.state.reminder_staging.lang = context.payload.content.actions[0].selected_option.value;
                             break;
                         default:
                             context.say("Please click save first")
