@@ -111,31 +111,6 @@ const machine = xstate.createMachine({
             }
         },
 
-        // --------------- TROI_SETUP ---------------
-        troi_setup: {
-            entry:
-                context => {
-                    context.user.state.current = "troi_setup";
-                    context.say("In Troi setup")
-                },
-            on: {
-                NEXT: {
-                    target: "troi_setup_receive_settings"
-                }
-            }
-        },
-        troi_setup_receive_settings: {
-            entry:
-                context => {
-                    context.user.state.current = "troi_setup_receive_settings";
-                },
-            on: {
-                NEXT: {
-                    target: "troi_setup_receive_settings"
-                }
-            }
-        },
-
         // --------------- REMINDER_SETUP ---------------
         reminder_setup:  {
             entry:
@@ -242,6 +217,31 @@ const machine = xstate.createMachine({
                         cond: context => { return context.user.reminder.active && context.user.state.choices.base_usage === "only_reminders" }
                     }
                 ]
+            }
+        },
+
+        // --------------- TROI_SETUP ---------------
+        troi_setup: {
+            entry:
+                context => {
+                    context.user.state.current = "troi_setup";
+                    context.say("In Troi setup")
+                },
+            on: {
+                NEXT: {
+                    target: "troi_setup_receive_settings"
+                }
+            }
+        },
+        troi_setup_receive_settings: {
+            entry:
+                context => {
+                    context.user.state.current = "troi_setup_receive_settings";
+                },
+            on: {
+                NEXT: {
+                    target: "troi_setup_receive_settings"
+                }
             }
         },
 
