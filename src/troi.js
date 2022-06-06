@@ -3,8 +3,7 @@ const config = require('../config.json');
 let troiApi;
 
 exports.startTroi = async () => {
-    const TroiApiService = await import("troi-library");
-    // make PR to troi-library for the methods required for impersonation TODO
+    const TroiApiService = await import("../../troi-library/index.js"); // temporary TODO
     troiApi = new TroiApiService.default({
         baseUrl: config.TROI_API_URL,
         clientName: config.TROI_CLIENT_NAME,
