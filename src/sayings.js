@@ -10,6 +10,9 @@ let sayings = {
     bookingConfirmations: []
 };
 
+const fallbackReminderPrompt = "Reminder to book your time in Troi.";
+const fallbackBookingConfirmation = "Your time was booked.";
+
 exports.initGoogleSheets = async () => {
     const doc = new GoogleSpreadsheet(config.GOOGLE_SHEET_TROI_SAYINGS_ID);
     await doc.useApiKey(config.GOOGLE_SHEETS_API_KEY);
@@ -45,9 +48,13 @@ const getRandomSaying = (arr, deOk = true, dramaLevel = undefined) => {
 }
 
 exports.getRandomReminderPrompt = (deOk = true, dramaLevel = undefined) => {
-    return getRandomSaying(sayings.reminderPrompts, deOk, dramaLevel);
+    let saying = getRandomSaying(sayings.reminderPrompts, deOk, dramaLevel);
+    if (!saying) return fallbackReminderPrompt;
+    return saying;
 };
 
 exports.getRandomBookingConfirmation = (deOk = true, dramaLevel = undefined) => {
-    return getRandomSaying(sayings.bookingConfirmations, deOk, dramaLevel);
+    let saying = getRandomSaying(sayings.bookingConfirmations, deOk, dramaLevel);
+    if (!saying) return fallbackBookingConfirmation;
+    return saying;
 };
