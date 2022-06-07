@@ -206,6 +206,12 @@ exports.reminder_setup_input_elements = () => {
 
 exports.troi_setup_text_short = "Set up Troi"
 
+exports.troi_setup_no_username_error = username => {
+    return "Troi did not find the username _" + username + "_ that I assumed for you. I am sorry about that. " +
+        "That is a problem without an automatic workaround or solution for now. Please raise an issue " +
+        "<https://github.com/digitalservice4germany/troi-slack-bot/issues|here>."
+}
+
 exports.troi_setup_text = () => {
     return [{
         "type": "section",

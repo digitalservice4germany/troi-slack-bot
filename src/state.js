@@ -2,8 +2,8 @@ const xstate = require("xstate");
 const schedule = require("node-schedule");
 const { users, registerNewUser } = require("./users");
 const { welcome_text, welcome_buttons, welcome_text_short,
-    reminder_setup_text_short, reminder_setup_text, reminder_setup_input_elements,
-    radioButtonValueToLabel, daysDef, troi_setup_text, troi_setup_text_short, troi_setup_findings
+    reminder_setup_text_short, reminder_setup_text, reminder_setup_input_elements, radioButtonValueToLabel, daysDef,
+    troi_setup_text, troi_setup_text_short, troi_setup_findings, troi_setup_no_username_error
 } = require("./blocks");
 const { buildRecurrenceRule, todayIsPublicHoliday, userSubmittedToday } = require("./util");
 const { storeEmployeeId } = require("./troi");
@@ -230,10 +230,7 @@ const machine = xstate.createMachine({
 
                     storeEmployeeId(context.user).then(() => {
                         if (!context.user.troi.employeeId) {
-                            context.say("Troi did not find the username _" + context.user.troi.username +
-                                "_ that I assumed for you. I am sorry about that. That is a problem without a " +
-                                "workaround or solution for now. Please raise an issue " +
-                                "<https://github.com/digitalservice4germany/troi-slack-bot/issues|here>.")
+                            context.say(troi_setup_no_username_error(context.user.troi.username))
                             return;
                         }
                         context.say({
