@@ -17,3 +17,16 @@ exports.startTroi = async () => {
 exports.storeEmployeeId = async (user) => {
     user.troi.employeeId = await troiApi.getEmployeeIdForUsername(user.troi.username);
 }
+
+exports.fetchPreviousCalculationPositions = async (user) => {
+    let response = await troiApi.getCalculationPositionsLastRecorded(user.troi.employeeId);
+    if (!response.length) return [];
+    let positions = [];
+    for (let pos of positions) {
+        positions.push({
+            id: pos.cpId,
+            path: pos.cpPath
+        });
+    }
+    return positions;
+}
