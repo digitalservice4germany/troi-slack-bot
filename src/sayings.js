@@ -27,6 +27,10 @@ exports.initGoogleSheets = async () => {
 }
 
 const fetchSayings = async () => {
+    sayings = {
+        reminderPrompts: [],
+        bookingConfirmations: []
+    };
     await fetchSayingsForSheet(reminderPromptsSheet, "reminderPrompts");
     await fetchSayingsForSheet(bookingConfirmationsSheet, "bookingConfirmations");
     console.log("Sayings were fetched");
@@ -37,7 +41,9 @@ const fetchSayingsForSheet = async (sheet, arrName) => {
     rawRows.forEach(rawRow => {
         let data = rawRow._rawData;
         if (data.length < 3) return;
-        sayings[arrName].push({ lang: data[0], dramaLevel: data[1], saying: data[2] });
+        if (data[0] && data[1] && data[2]) {
+            sayings[arrName].push({ lang: data[0], dramaLevel: data[1], saying: data[2] });
+        }
     });
 }
 
