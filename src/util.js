@@ -1,19 +1,17 @@
 const schedule = require("node-schedule");
 const moment = require("moment");
-const de = require("../locale/de.json");
-const en = require("../locale/en.json");
 
 const publicHolidaysBerlin = ["26.05.2022", "06.06.2022", "03.10.2022", "26.12.2022"];
 
 exports.lang = (user, key) => {
-    let json = user.language.active === "en" ? en : de;
+    /*let json = user.language.active === "en" ? en : de;
     user.language.lastUsedKey = key;
     let entries = json[key];
     // distinguish what type of entry it is, could be fix value or array (in that case pick random value) TODO
     let entry = entries[Math.floor(Math.random() * entries.length)];
     entry = entry.replace("<name>", user.displayName);
     entry = entry.replace("<weekday>", new Date().toLocaleString(user.language.active, { weekday: "long" }));
-    return entry;
+    return entry;*/
 }
 
 exports.buildRecurrenceRule = scheduleDef => {
