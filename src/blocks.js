@@ -213,7 +213,7 @@ exports.troi_setup_no_username_error = username => {
         "\n• You have a different username than the one I assumed. If that is the case, please raise an issue " +
         "<https://github.com/digitalservice4germany/troi-slack-bot/issues|here>." +
         "\n\nUnfortunately this means that I won't be very useful to you :cry: You can of course use my reminder " +
-        "function if that is helpful somehow :shrug: Otherwise, you can completely stop me by writing stop all (*TODO*).";
+        "function if that is helpful somehow :shrug: Otherwise, you can completely stop me by writing _stop all_. *TODO*";
 }
 
 exports.troi_setup_text = () => {
@@ -239,7 +239,7 @@ exports.troi_setup_findings = user => {
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": "For your Troi username _" + user.troi.username + "_ I found..." // TODO
+            "text": "For your Troi username _" + user.troi.username + "_ I found... *TODO*"
         }
     }]
 }

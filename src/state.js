@@ -239,6 +239,7 @@ const machine = xstate.createMachine({
                         }
                         context.say({
                             blocks: [
+                                // use context.say without blocks for the text parts to use full width https://stackoverflow.com/a/58805625 TODO
                                 ...troi_setup_text(),
                                 ...troi_setup_findings(context.user)
                             ],
