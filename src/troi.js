@@ -22,7 +22,7 @@ exports.fetchPreviousCalculationPositions = async (user) => {
     let response = await troiApi.getCalculationPositionsLastRecorded(user.troi.employeeId);
     if (!response.length) return [];
     let positions = [];
-    for (let pos of positions) {
+    for (let pos of response) {
         positions.push({
             id: pos.cpId,
             path: pos.cpPath
