@@ -207,9 +207,13 @@ exports.reminder_setup_input_elements = () => {
 exports.troi_setup_text_short = "Set up Troi"
 
 exports.troi_setup_no_username_error = username => {
-    return "Troi did not find the username _" + username + "_ that I assumed for you. I am sorry about that. " +
-        "That is a problem without an automatic workaround or solution for now. Please raise an issue " +
-        "<https://github.com/digitalservice4germany/troi-slack-bot/issues|here>."
+    return "I could not find you on Troi with the username _" + username + "_. That could mean two things:" +
+        "\n\n• You don't have an account in Troi. Maybe because you don't have to book time? If you think that's not correct, " +
+        "please contact Lisa S." +
+        "\n• You have a different username than the one I assumed. If that is the case, please raise an issue " +
+        "<https://github.com/digitalservice4germany/troi-slack-bot/issues|here>." +
+        "\n\nUnfortunately this means that I won't be very useful to you :cry: You can of course use my reminder " +
+        "function if that is helpful somehow :shrug: Otherwise, you can completely stop me by writing stop all (*TODO*).";
 }
 
 exports.troi_setup_text = () => {

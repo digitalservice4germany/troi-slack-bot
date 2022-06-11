@@ -230,7 +230,11 @@ const machine = xstate.createMachine({
 
                     storeEmployeeId(context.user).then(() => {
                         if (!context.user.troi.employeeId) {
-                            context.say(troi_setup_no_username_error(context.user.troi.username))
+                            context.say({
+                                text: troi_setup_no_username_error(context.user.troi.username),
+                                unfurl_links: false
+                            })
+                            context.getService().send("NEXT");
                             return;
                         }
                         context.say({
@@ -245,9 +249,16 @@ const machine = xstate.createMachine({
 
                 },
             on: {
-                NEXT: {
-                    target: "troi_setup_receive_settings"
-                }
+                NEXT: [
+                    {
+                        target: "troi_setup_receive_settings",
+                        cond: context => { return context.user.troi.employeeId }
+                    },
+                    {
+                        target: "default_listening_state",
+                        cond: context => { return !context.user.troi.employeeId }
+                    },
+                ]
             }
         },
         troi_setup_receive_settings: {
