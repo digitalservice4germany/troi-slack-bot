@@ -61,3 +61,8 @@ exports.registerNewUser = async (eventOrMessage, client, say) => {
         "From your email-address I derived that your Troi username is *" + user.troi.username + "*. If this" +
         " is not correct, please change it by sending: _username: <your-Troi-username>_");*/
 }
+
+exports.deleteUser = user => {
+    // cancel any scheduled reminders he might have TODO
+    delete this.users[user.id];
+}

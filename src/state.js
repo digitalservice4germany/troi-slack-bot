@@ -1,9 +1,9 @@
 const xstate = require("xstate");
 const schedule = require("node-schedule");
-const { users, registerNewUser } = require("./users");
-const { welcome_text, welcome_buttons, welcome_text_short,
+const { users, registerNewUser, deleteUser } = require("./users");
+const { welcome_text, welcome_buttons, welcome_text_short, welcome_text_no_troi_username_error, welcome_text_post_choice,
     reminder_setup_text_short, reminder_setup_text, reminder_setup_input_elements, radioButtonValueToLabel, daysDef,
-    troi_setup_text, troi_setup_text_short, troi_setup_findings, troi_setup_no_username_error
+    troi_setup_text, troi_setup_text_short, troi_setup_findings, welcome_text_intro
 } = require("./blocks");
 const { buildRecurrenceRule, todayIsPublicHoliday, userSubmittedToday } = require("./util");
 const { storeEmployeeId, fetchPreviousCalculationPositions } = require("./troi");
@@ -58,12 +58,27 @@ const machine = xstate.createMachine({
             entry:
                 context => {
                     context.user.state.current = "welcome";
-                    context.say({
-                        blocks: [
-                            ...welcome_text(context.user.displayName),
-                            ...welcome_buttons()
-                        ],
-                        text: welcome_text_short
+                    context.say(welcome_text_intro(context.user.displayName));
+
+                    const welcomeMsgs = onlyRemindersPossible => {
+                        context.say(welcome_text(onlyRemindersPossible)).then(() => {
+                            context.say({
+                                blocks: [...welcome_buttons(onlyRemindersPossible)],
+                                text: welcome_text_short
+                            });
+                        });
+                    };
+
+                    storeEmployeeId(context.user).then(() => {
+                        let onlyRemindersPossible = context.user.troi.employeeId == null; // == catches also undefined, === would not
+                        if (onlyRemindersPossible) {
+                            context.say({
+                                text: welcome_text_no_troi_username_error(context.user.troi.username),
+                                unfurl_links: false
+                            }).then(() => welcomeMsgs(onlyRemindersPossible));
+                        } else {
+                            welcomeMsgs(onlyRemindersPossible);
+                        }
                     });
                 },
             on: {
@@ -89,11 +104,14 @@ const machine = xstate.createMachine({
                     context.payload.client.chat.update({
                         channel: context.user.channel,
                         ts: context.payload.content.message.ts,
-                        blocks: [
-                            ...welcome_text(context.user.displayName, btnChoice)
-                        ],
+                        blocks: [...welcome_text_post_choice(btnChoice)],
                         text: welcome_text_short
                     }).then(() => {
+                        if (btnChoice === "btn_cancel") {
+                            deleteUser(context.user);
+                            context.say("Ok, I scrubbed you from my memory  :floppy_disk: :recycle: Feel free to come back any time :wave:");
+                            return;
+                        }
                         context.getService().send("NEXT"); // is that good style? Don't know how else to trigger the transition
                     })
                 },
@@ -229,28 +247,17 @@ const machine = xstate.createMachine({
                 context => {
                     context.user.state.current = "troi_setup";
 
-                    storeEmployeeId(context.user).then(() => {
-                        if (!context.user.troi.employeeId) {
-                            context.say({
-                                text: troi_setup_no_username_error(context.user.troi.username),
-                                unfurl_links: false
-                            })
-                            context.getService().send("NEXT");
-                            return;
-                        }
+                    context.say(troi_setup_text());
 
-                        context.say(troi_setup_text());
+                    fetchPreviousCalculationPositions(context.user).then(previousCPs => {
+                        console.log("previousCPs", previousCPs)
 
-                        fetchPreviousCalculationPositions(context.user).then(previousCPs => {
-                            console.log("previousCPs", previousCPs)
-
-                            context.say({
-                                blocks: [
-                                    ...troi_setup_findings(context.user)
-                                ],
-                                text: troi_setup_text_short
-                            }).then(() => {});
-                        });
+                        context.say({
+                            blocks: [
+                                ...troi_setup_findings(context.user)
+                            ],
+                            text: troi_setup_text_short
+                        }).then(() => {});
                     });
                 },
             on: {

@@ -2,28 +2,49 @@
 
 exports.welcome_text_short = "Welcome! Choose how to use BleibTroy.";
 
-exports.welcome_text = (name, btnChoice) => {
+exports.welcome_text_intro = name => {
+    return "Hey " + name + " :wave: nice to meet you! Allow me to introduce " +
+        "myself. I am *BleibTroy*, your personal time booking assistant :robot_face: :hourglass_flowing_sand:";
+}
+
+exports.welcome_text_no_troi_username_error = username => {
+    return "Oh no! :scream_cat: I could not find you on Troi with the username _" + username + "_ :zap: That could mean two things:" +
+        "\n\n• You don't have an account in Troi. Maybe because you don't have to book time? If you think that's not " +
+        "correct, please contact Lisa S." +
+        "\n• You have a different username than the one I assumed. If that is the case, please raise an issue " +
+        "<https://github.com/digitalservice4germany/troi-slack-bot/issues|here>." +
+        "\n\nUnfortunately this means I won't be very useful to you :cry: You can of course use my reminder " +
+        "function if that is helpful somehow :shrug:";
+}
+
+exports.welcome_text = onlyRemindersPossible => {
+    if (onlyRemindersPossible) {
+        return "Would you like to set up reminders now? :bell:";
+    }
+    return "But first things first, let's find out how you are planning on using me. " +
+        "I can do two things for you:" +
+        "\n\n• send you regular reminders to book your time :bell:" +
+        "\n• let you book time right here from Slack :writing_hand:" +
+        "\n\nNote that you can always also book time directly in Troi " +
+        "or in our other in-house tool <https://track-your-time.dev.ds4g.net/|track-your-time>. " +
+        "\nAlright, Please make your choice (you can always change this later on) :ballot_box_with_ballot: :drum_with_drumsticks:";
+}
+
+exports.welcome_text_post_choice = btnChoice => {
     return [{
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": "Hey " + name + " :wave: nice to meet you! Allow me to introduce " +
-                "myself. I am *BleibTroy*, your personal time booking assistant :robot_face:" +
-                ":hourglass_flowing_sand: I am sure we will have a great time together. But first things first, " +
-                "let's find out how you are planning on using me. I can do two things for you:\n\n• send you " +
-                "reminders to book your time :bell:\n• let you actually book time right here, and I'll send " +
-                "it to Troi for you :writing_hand:\n\nNote that you can always also book time directly in Troi " +
-                "or in our other in-house tool <https://track-your-time.dev.ds4g.net/|track-your-time>. " +
-                "Alright, please make your choice (you can always change this later on) :drum_with_drumsticks:" +
-                (btnChoice ? "\n\n :point_right:  You chose: *" + btnIdToText[btnChoice] + "*" : "")
+            "text": "\n\n:point_right: You chose: *" + btnIdToText[btnChoice] + "*"
         }
-    }]
+    }];
 }
 
 const btnIdToText = {
-    btn_reminders_and_booking: "Both reminders and booking",
+    btn_reminders_and_booking: "Both",
     btn_only_reminders: "Only reminders",
     btn_only_booking: "Only booking",
+    btn_cancel: "No thanks, get me out of here"
 }
 
 const buildBtnElement = (btnId, style) => {
@@ -39,15 +60,18 @@ const buildBtnElement = (btnId, style) => {
     return el;
 }
 
-exports.welcome_buttons = () => {
-    return [{
+exports.welcome_buttons = onlyRemindersPossible => {
+    let buttonBlock = {
         "type": "actions",
-        "elements": [
-            buildBtnElement("btn_reminders_and_booking", "primary"),
-            buildBtnElement("btn_only_reminders"),
-            buildBtnElement("btn_only_booking")
-        ]
-    }]
+        "elements": []
+    };
+    if (!onlyRemindersPossible) {
+        buttonBlock.elements.push(buildBtnElement("btn_reminders_and_booking", "primary"));
+        buttonBlock.elements.push(buildBtnElement("btn_only_booking"));
+    }
+    buttonBlock.elements.push(buildBtnElement("btn_only_reminders"));
+    buttonBlock.elements.push(buildBtnElement("btn_cancel"));
+    return [buttonBlock];
 }
 
 // REMINDER
@@ -205,16 +229,6 @@ exports.reminder_setup_input_elements = () => {
 // TROI
 
 exports.troi_setup_text_short = "Set up Troi"
-
-exports.troi_setup_no_username_error = username => {
-    return "I could not find you on Troi with the username _" + username + "_. That could mean two things:" +
-        "\n\n• You don't have an account in Troi. Maybe because you don't have to book time? If you think that's not correct, " +
-        "please contact Lisa S." +
-        "\n• You have a different username than the one I assumed. If that is the case, please raise an issue " +
-        "<https://github.com/digitalservice4germany/troi-slack-bot/issues|here>." +
-        "\n\nUnfortunately this means that I won't be very useful to you :cry: You can of course use my reminder " +
-        "function if that is helpful somehow :shrug: Otherwise, you can completely stop me by writing _stop all_. *TODO*";
-}
 
 exports.troi_setup_text = () => {
     return "Alright, there is just one thing I need your help with before you can start booking your time in Troi " +
