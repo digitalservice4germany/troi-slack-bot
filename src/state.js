@@ -246,18 +246,19 @@ const machine = xstate.createMachine({
             entry:
                 context => {
                     context.user.state.current = "troi_setup";
-
                     context.say(troi_setup_text());
 
                     fetchPreviousCalculationPositions(context.user).then(previousCPs => {
-                        console.log("previousCPs", previousCPs)
-
+                        // TODO
                         context.say({
-                            blocks: [
-                                ...troi_setup_findings(context.user)
-                            ],
+                            blocks: [...troi_setup_findings(context.user)],
                             text: troi_setup_text_short
-                        }).then(() => {});
+                        }).then(() => {
+                            // 1. previous CPs
+                            // 2. add CP-IDs directly
+                            // 3. start search
+                            // 4. if more than 1 CP --> give nicknames
+                        });
                     });
                 },
             on: {
@@ -273,6 +274,8 @@ const machine = xstate.createMachine({
                 ]
             }
         },
+
+        // --------------- TROI_SETUP_RECEIVE_SETTINGS ---------------
         troi_setup_receive_settings: {
             entry:
                 context => {

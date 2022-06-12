@@ -47,19 +47,6 @@ exports.registerNewUser = async (eventOrMessage, client, say) => {
     this.users[user.id] = user;
     console.log("New user registered: " + user.displayName);
     return user;
-    /*user.troi.employeeId = await troiApi.getEmployeeIdForUserName(user.troi.username); TODO
-    let projects = await troiApi.getCalculationPositions();
-    if (projects.length === 1) {
-        user.troi.defaultProject = projects[0].id;
-    } else {
-        // ask users to give nicknames for projects TODO
-    }
-    // don't allow changing of usernames? Instead verify email with Google OAuth? TODO
-    // instead of API impersonation, use a PIN that people have to enter with each entry and encrypt the stored password with that? TODO
-    await say("Hey there " + user.displayName + ", nice to meet you! I set up the default reminder for you:" +
-        " _every weekday at 17:00_.\n" +
-        "From your email-address I derived that your Troi username is *" + user.troi.username + "*. If this" +
-        " is not correct, please change it by sending: _username: <your-Troi-username>_");*/
 }
 
 exports.deleteUser = user => {
