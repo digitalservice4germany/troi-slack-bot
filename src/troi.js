@@ -21,12 +21,12 @@ exports.storeEmployeeId = async (user) => {
 exports.fetchPreviousCalculationPositions = async (user) => {
     let response = await troiApi.getCalculationPositionsLastRecorded(user.troi.employeeId);
     if (!response.length) return [];
-    let positions = [];
-    for (let pos of response) {
-        positions.push({
-            id: pos.cpId,
-            path: pos.cpPath
+    let previousCPs = [];
+    for (let cp of response) {
+        previousCPs.push({
+            id: cp.cpId,
+            path: cp.cpPath
         });
     }
-    return positions;
+    return previousCPs;
 }

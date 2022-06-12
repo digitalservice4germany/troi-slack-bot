@@ -217,21 +217,15 @@ exports.troi_setup_no_username_error = username => {
 }
 
 exports.troi_setup_text = () => {
-    return [{
-        "type": "section",
-        "text": {
-            "type": "mrkdwn",
-            "text": "Alright, there is just one thing I need your help with before you can start booking " +
-                "your time in Troi with me. And that is to find out which so called _position(s)_ you are booking onto. I need " +
-                "the IDs of those. Unfortunately I can't access positions you might have marked as favorites directly in Troi. " +
-                "I can guide you through a search process to identify those positions. However, before we resort to " +
-                " that there is two things we can try that are a bit faster: " +
-                "\n\n• I can check on which positions you booked previously" +
-                "\n• You can see a position ID when hovering the mouse over a position title in the " +
-                "<https://track-your-time.dev.ds4g.net/|track-your-time> tool or under _Stundenerfassung_ in Troi (it " +
-                "says _Suchnummer: K123_ --> _123_ is the position ID in this case)"
-        }
-    }]
+    return "Alright, there is just one thing I need your help with before you can start booking your time in Troi " +
+        "with me. And that is to find out which so called _position(s)_ you are booking onto. I need the IDs of those. " +
+        "Unfortunately I can't access positions you might have marked as favorites directly in Troi. " +
+        "I can guide you through a search process to identify those positions. However, before we resort to " +
+        " that there is two things we can try that are a bit faster: " +
+        "\n\n• I will check on which positions you booked previously" +
+        "\n• You can see a position ID when hovering the mouse over a position title in the " +
+        "<https://track-your-time.dev.ds4g.net/|track-your-time> tool or under _Stundenerfassung_ in Troi (it " +
+        "says _Suchnummer: K123_ --> _123_ is the position ID in this case)";
 }
 
 exports.troi_setup_findings = user => {

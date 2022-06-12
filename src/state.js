@@ -6,7 +6,7 @@ const { welcome_text, welcome_buttons, welcome_text_short,
     troi_setup_text, troi_setup_text_short, troi_setup_findings, troi_setup_no_username_error
 } = require("./blocks");
 const { buildRecurrenceRule, todayIsPublicHoliday, userSubmittedToday } = require("./util");
-const { storeEmployeeId } = require("./troi");
+const { storeEmployeeId, fetchPreviousCalculationPositions } = require("./troi");
 const config = require("../config.json");
 
 exports.handleMessage = async (message, say, client) => {
@@ -119,6 +119,7 @@ const machine = xstate.createMachine({
                     context.user.state.current = "reminder_setup";
                     context.say({
                         blocks: [
+                            // use context.say without blocks for the text parts to use full width https://stackoverflow.com/a/58805625 TODO
                             ...reminder_setup_text(),
                             ...reminder_setup_input_elements()
                         ],
@@ -237,17 +238,20 @@ const machine = xstate.createMachine({
                             context.getService().send("NEXT");
                             return;
                         }
-                        context.say({
-                            blocks: [
-                                // use context.say without blocks for the text parts to use full width https://stackoverflow.com/a/58805625 TODO
-                                ...troi_setup_text(),
-                                ...troi_setup_findings(context.user)
-                            ],
-                            text: troi_setup_text_short
-                        }).then(() => {});
+
+                        context.say(troi_setup_text());
+
+                        fetchPreviousCalculationPositions(context.user).then(previousCPs => {
+                            console.log("previousCPs", previousCPs)
+
+                            context.say({
+                                blocks: [
+                                    ...troi_setup_findings(context.user)
+                                ],
+                                text: troi_setup_text_short
+                            }).then(() => {});
+                        });
                     });
-
-
                 },
             on: {
                 NEXT: [
