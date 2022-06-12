@@ -27,18 +27,18 @@ slackApp.message(async ({ message, client, say }) => {
 
 // Actions
 
-slackApp.action(new RegExp('^btn', 'i'), async ({ body, ack, say, client}) => {
+slackApp.action(/^btn/i, async ({ body, ack, say, client}) => {
     await handleActionResponse("button-response", body, ack, say, client);
 });
 
-slackApp.action(new RegExp('^timepicker', 'i'), async ({ body, ack, say, client}) => {
+slackApp.action(/^timepicker/i, async ({ body, ack, say, client}) => {
     await handleActionResponse("timepicker-response", body, ack, say, client);
 });
 
-slackApp.action(new RegExp('^checkboxes', 'i'), async ({ body, ack, say, client}) => {
+slackApp.action(/^checkboxes/i, async ({ body, ack, say, client}) => {
     await handleActionResponse("checkbox-response", body, ack, say, client);
 });
 
-slackApp.action(new RegExp('^radiobuttons', 'i'), async ({ body, ack, say, client}) => {
+slackApp.action(/^radiobuttons/i, async ({ body, ack, say, client}) => {
     await handleActionResponse("radiobutton-response", body, ack, say, client);
 });
