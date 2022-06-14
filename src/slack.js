@@ -42,3 +42,7 @@ slackApp.action(/^checkboxes/i, async ({ body, ack, say, client}) => {
 slackApp.action(/^radiobuttons/i, async ({ body, ack, say, client}) => {
     await handleActionResponse("radiobutton-response", body, ack, say, client);
 });
+
+slackApp.action(/^textinput/i, async ({ body, ack, say, client}) => {
+    await handleActionResponse("textinput-response", body, ack, say, client);
+});

@@ -253,10 +253,7 @@ const machine = xstate.createMachine({
                             blocks: [...troi_setup_findings(previousCPs)],
                             text: troi_setup_text_short
                         }).then(() => {
-                            // 1. previous CPs
-                            // 2. add CP-IDs directly
-                            // 3. start search
-                            // 4. if more than 1 CP --> give nicknames
+                            // if more than 1 CP --> give nicknames TODO
                         });
                     });
                 },
@@ -279,6 +276,19 @@ const machine = xstate.createMachine({
             entry:
                 context => {
                     context.user.state.current = "troi_setup_receive_settings";
+                    switch (context.payload.type) {
+                        case "checkbox-response":
+                            break;
+                        case "textinput-response":
+                            break;
+                        case "radiobutton-response":
+                            break;
+                        case "button-response":
+                            break;
+                        default:
+                            context.say("Please click save first")
+                            return;
+                    }
                 },
             on: {
                 NEXT: {

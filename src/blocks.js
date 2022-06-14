@@ -299,11 +299,71 @@ exports.troi_setup_findings = previousCPs => {
         blocks.push(buildPreviousCPsChoiceBlock(previousCPs));
     }
 
-    // NEW CPs by giving IDs
-    // TODO
+    // NEW CPs by manually providing cpIDs
+
+    blocks.push({
+        "type": "input",
+        "dispatch_action": true,
+        "element": {
+            "type": "plain_text_input",
+            "action_id": "textinput_additional_cpIDs",
+            "dispatch_action_config": {
+                "trigger_actions_on": ["on_character_entered"]
+            }
+        },
+        "label": {
+            "type": "plain_text",
+            "text": "Do you know the IDs of other positions you want to book time on? Add them here comma-separated (e.g. 16,42)"
+        }
+    });
 
     // SEARCH REQUIRED
-    // TODO
+
+    const buildOption = text => {
+      return {
+          "text": {
+              "type": "plain_text",
+              "text": text
+          },
+          "value": "troi_search_" + text
+      }
+    };
+
+    let searchBlock = {
+        "type": "input",
+        "element": {
+            "type": "radio_buttons",
+            "initial_option": {},
+            "options": [],
+            "action_id": "radiobuttons_search_cpIDs"
+        },
+        "label": {
+            "type": "plain_text",
+            "text": "Do you need help identifying your (further) booking position(s)? I can help with that."
+        }
+    };
+
+    searchBlock.element.options.push(buildOption("Yes"));
+    searchBlock.element.options.push(buildOption("No"));
+    searchBlock.element.initial_option = buildOption("No");
+    blocks.push(searchBlock);
+
+    // SAVE BUTTON
+
+    blocks.push({
+        "type": "actions",
+        "elements": [
+            {
+                "type": "button",
+                "text": {
+                    "type": "plain_text",
+                    "text": "Save"
+                },
+                "style": "primary",
+                "action_id": "btn_save_troi_setup"
+            }
+        ]
+    });
 
     return blocks;
 }
