@@ -162,6 +162,19 @@ const machine = xstate.createMachine({
                     let user = context.user;
                     user.state.current = "reminder_setup_receive_settings"
                     switch (context.payload.type) {
+                        case "timepicker-response":
+                            user.state.reminder_staging.time = context.payload.content.actions[0].selected_time;
+                            break;
+                        case "checkbox-response":
+                            let str = "";
+                            for (let dayEl of context.payload.content.actions[0].selected_options) {
+                                str += "," + dayEl.value;
+                            }
+                            user.state.reminder_staging.activeDays = str.substring(1);
+                            break;
+                        case "radiobutton-response":
+                            user.state.reminder_staging.lang = context.payload.content.actions[0].selected_option.value;
+                            break;
                         case "button-response":
                             let choiceTxt = "";
                             let days = user.state.reminder_staging.activeDays.split(",");
@@ -204,19 +217,6 @@ const machine = xstate.createMachine({
                             });
                             user.language.deOk = user.state.reminder_staging.lang === "english_and_german";
                             user.state.reminder_staging = {};
-                            break;
-                        case "checkbox-response":
-                            let str = "";
-                            for (let dayEl of context.payload.content.actions[0].selected_options) {
-                                str += "," + dayEl.value;
-                            }
-                            user.state.reminder_staging.activeDays = str.substring(1);
-                            break;
-                        case "timepicker-response":
-                            user.state.reminder_staging.time = context.payload.content.actions[0].selected_time;
-                            break;
-                        case "radiobutton-response":
-                            user.state.reminder_staging.lang = context.payload.content.actions[0].selected_option.value;
                             break;
                         default:
                             context.say("Please click save first")
