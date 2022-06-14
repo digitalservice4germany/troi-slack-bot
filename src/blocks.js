@@ -122,16 +122,6 @@ exports.daysDef = {
     }
 }
 
-const buildCheckboxElement = day => {
-    return {
-        "text": {
-            "type": "plain_text",
-            "text": day
-        },
-        "value": day
-    }
-}
-
 exports.radioButtonValueToLabel = {
     english_and_german: "English and German",
     only_english: "Only English"
@@ -218,6 +208,16 @@ exports.reminder_setup_input_elements = () => {
         }
     ];
 
+    const buildCheckboxElement = day => {
+        return {
+            "text": {
+                "type": "plain_text",
+                "text": day
+            },
+            "value": day
+        }
+    }
+
     for (let key of Object.keys(this.daysDef)) {
         elements[1].element.options.push(buildCheckboxElement(key))
         if (this.daysDef[key].default) elements[1].element.initial_options.push(buildCheckboxElement(key))
@@ -242,12 +242,68 @@ exports.troi_setup_text = () => {
         "says _Suchnummer: K123_ --> _123_ is the position ID in this case)";
 }
 
-exports.troi_setup_findings = user => {
-    return [{
+const buildPreviousCPsChoiceBlock = previousCPs => {
+    let previousCPsChoiceBlock = {
+        "type": "input",
+        "element": {
+            "type": "checkboxes",
+            "initial_options": [],
+            "options": [],
+            "action_id": "checkboxes_troi_setup_previous_cps"
+        },
+        "label": {
+            "type": "plain_text",
+            "text": "Which of your previously used booking positions are you still booking time on:"
+        }
+    };
+
+    const buildCheckboxElement = (text, value) => {
+        return {
+            "text": {
+                "type": "plain_text",
+                "text": text
+            },
+            "value": value
+        }
+    }
+
+    for (let cp of previousCPs) {
+        let value = "cpID_" + cp.id;
+        let text = "Position ID " + cp.id + ": " + cp.path;
+        previousCPsChoiceBlock.element.options.push(buildCheckboxElement(text, value));
+        previousCPsChoiceBlock.element.initial_options.push(buildCheckboxElement(text, value));
+    }
+
+    return previousCPsChoiceBlock;
+}
+
+exports.troi_setup_findings = previousCPs => {
+    let blocks = [];
+
+    // PREVIOUS CPs
+
+    blocks.push({
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": "For your Troi username _" + user.troi.username + "_ I found... *TODO*"
+            "text": ""
         }
-    }]
+    });
+
+    if (previousCPs.length === 0) {
+        blocks[0].text.text = "I couldn't find any positions that you previously booked on.";
+    } else {
+        blocks[0].text.text = "I found "
+            + (previousCPs.length > 1 ? previousCPs.length + " positions" : "one position")
+            + " that you previously booked on.";
+        blocks.push(buildPreviousCPsChoiceBlock(previousCPs));
+    }
+
+    // NEW CPs by giving IDs
+    // TODO
+
+    // SEARCH REQUIRED
+    // TODO
+
+    return blocks;
 }

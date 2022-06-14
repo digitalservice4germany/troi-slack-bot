@@ -249,9 +249,8 @@ const machine = xstate.createMachine({
                     context.say(troi_setup_text());
 
                     fetchPreviousCalculationPositions(context.user).then(previousCPs => {
-                        // TODO
                         context.say({
-                            blocks: [...troi_setup_findings(context.user)],
+                            blocks: [...troi_setup_findings(previousCPs)],
                             text: troi_setup_text_short
                         }).then(() => {
                             // 1. previous CPs
