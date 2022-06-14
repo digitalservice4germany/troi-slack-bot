@@ -10,8 +10,9 @@ let sayings = {
     bookingConfirmations: []
 };
 
-const fallbackReminderPrompt = "Reminder to book your time in Troi.";
-const fallbackBookingConfirmation = "Your time was booked.";
+const fallbackSorry = "(sorry I am not more creative today, I can't reach my Google Sheet for some reason)";
+const fallbackReminderPrompt = "Reminder to book your time in Troi " + fallbackSorry;
+const fallbackBookingConfirmation = "Your time was booked " + fallbackSorry;
 
 exports.initGoogleSheets = async () => {
     const doc = new GoogleSpreadsheet(config.GOOGLE_SHEET_TROI_SAYINGS_ID);
