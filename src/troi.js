@@ -14,6 +14,7 @@ exports.startTroi = async () => {
     console.log("Connection to the Troi API is initialized");
 }
 
+let root;
 let nodes = {};
 let services = {};
 
@@ -24,14 +25,16 @@ const buildNode = (id, name, type) => {
         name: name,
         type: type,
         displayPath: "",
+        serviceId: "",
         children: []
     }
 }
 
-let root = buildNode("root", "root", "ROOT");
-nodes["root"] = root;
-
 exports.buildOrgGraph = async () => {
+    nodes = {}; // id to node
+    services = {}; // id to name
+    root = buildNode("root", "root", "ROOT");
+    nodes["root"] = root;
     let node;
 
     let projects = await troiApi.getAllProjects();
@@ -53,6 +56,7 @@ exports.buildOrgGraph = async () => {
         }
         nodes[parentId].children.push(subproj.Path);
     }
+    // it's possible to have subprojects of a subproject, support this when we'll have that case TODO
 
     let calculationPositions = await troiApi.getAllCalculationPositions();
     for (let calculationPosition of calculationPositions) {
@@ -61,7 +65,9 @@ exports.buildOrgGraph = async () => {
         nodes[node.id] = node;
         nodes[calculationPosition.Subproject.Path].children.push(node.id);
         if (calculationPosition.Service) {
-            services[calculationPosition.Service.Path] = calculationPosition.Service.Name;
+            let serviceId = calculationPosition.Service.Path;
+            services[serviceId] = calculationPosition.Service.Name;
+            nodes[node.id].serviceId = serviceId;
         }
     }
 
