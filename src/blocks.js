@@ -308,6 +308,7 @@ exports.troi_setup_findings = previousCPs => {
             "type": "plain_text_input",
             "action_id": "textinput_additional_cpIDs",
             "dispatch_action_config": {
+                // I wish this wasn't necessary on by-character-level, but the alternative by enter can't be expected from the user
                 "trigger_actions_on": ["on_character_entered"]
             }
         },
@@ -366,4 +367,14 @@ exports.troi_setup_findings = previousCPs => {
     });
 
     return blocks;
+}
+
+exports.troi_setup_cp_choice = choice => {
+    return [{
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": ":point_right: You chose: " + choice
+        }
+    }]
 }

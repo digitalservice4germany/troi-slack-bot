@@ -15,13 +15,14 @@ exports.buildDefaultUser = (userID, channelID, userInfo) => {
             choices: {
                 base_usage: null
             },
-            reminder_staging: {}
+            reminder_staging: {},
+            troi_staging: {}
         },
         troi: {
             active: null,
             username: userInfo.user.profile.email.split("@")[0],
             employeeId: null,
-            positions: [], // { id: xy, partOfProject: abc, nickname: null }
+            positions: [], // { id: xy, nickname: null }
             defaultPosition: null,
             stats: {
                 currentStreak: 0,

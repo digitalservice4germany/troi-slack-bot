@@ -3,7 +3,7 @@ const schedule = require("node-schedule");
 const { users, registerNewUser, deleteUser } = require("./users");
 const { welcome_text, welcome_buttons, welcome_text_short, welcome_text_no_troi_username_error, welcome_text_post_choice,
     reminder_setup_text_short, reminder_setup_text, reminder_setup_input_elements, radioButtonValueToLabel, daysDef,
-    troi_setup_text, troi_setup_text_short, troi_setup_findings, welcome_text_intro
+    troi_setup_text, troi_setup_text_short, troi_setup_findings, welcome_text_intro, troi_setup_cp_choice
 } = require("./blocks");
 const { buildRecurrenceRule, todayIsPublicHoliday, userSubmittedToday } = require("./util");
 const { storeEmployeeId, fetchPreviousCalculationPositions } = require("./troi");
@@ -245,15 +245,20 @@ const machine = xstate.createMachine({
         troi_setup: {
             entry:
                 context => {
-                    context.user.state.current = "troi_setup";
+                    let user = context.user;
+                    user.state.current = "troi_setup";
                     context.say(troi_setup_text());
 
-                    fetchPreviousCalculationPositions(context.user).then(previousCPs => {
+                    fetchPreviousCalculationPositions(user).then(previousCPs => {
                         context.say({
                             blocks: [...troi_setup_findings(previousCPs)],
                             text: troi_setup_text_short
                         }).then(() => {
-                            // if more than 1 CP --> give nicknames TODO
+                            let str = "";
+                            for (let cp of previousCPs) str += "," + cp.id;
+                            user.state.troi_staging.previouslyUsedCPs = str.substring(1);
+                            user.state.troi_staging.newCPsById = "";
+                            user.state.troi_staging.doSearchCPs = false;
                         });
                     });
                 },
@@ -275,15 +280,62 @@ const machine = xstate.createMachine({
         troi_setup_receive_settings: {
             entry:
                 context => {
-                    context.user.state.current = "troi_setup_receive_settings";
+                    let user = context.user;
+                    user.state.current = "troi_setup_receive_settings";
                     switch (context.payload.type) {
                         case "checkbox-response":
+                            let str = "";
+                            for (let cpEl of context.payload.content.actions[0].selected_options) {
+                                str += "," + cpEl.value.substring(5);
+                            }
+                            user.state.troi_staging.previouslyUsedCPs = str.substring(1);
                             break;
                         case "textinput-response":
+                            user.state.troi_staging.newCPsById = context.payload.content.actions[0].value;
                             break;
                         case "radiobutton-response":
+                            user.state.troi_staging.doSearchCPs = context.payload.content.actions[0].selected_option.value === "troi_search_Yes";
                             break;
                         case "button-response":
+                            let prevCPsRaw = user.state.troi_staging.previouslyUsedCPs;
+                            let newCPsRaw = user.state.troi_staging.newCPsById;
+                            let prevCPs = prevCPsRaw ? prevCPsRaw.split(",") : [];
+                            let newCPs = newCPsRaw ? newCPsRaw.split(",") : [];
+                            let choiceTxt = "";
+                            if (prevCPs.length > 0 || newCPs.length > 0) {
+                                choiceTxt = "\n*To book on the following position(s):* ";
+                            }
+                            if (prevCPs.length > 0) {
+                                choiceTxt += "\n--> your previously used position" + (prevCPs.length > 1 ? "s" : "") + ": " + prevCPs;
+                            }
+                            if (newCPs.length > 0) {
+                                choiceTxt += "\n--> the position" + (newCPs.length > 1 ? "s" : "") + " you added directly by Id" + ": " + newCPs;
+                            }
+                            [...prevCPs, ...newCPs].forEach(cpId => {
+                                user.troi.positions.push({
+                                    id: cpId,
+                                    nickname: null
+                                })
+                            });
+                            if (user.state.troi_staging.doSearchCPs) {
+                                choiceTxt += "\n*To search for your position(s) in the next step.*";
+                                user.state.troi_staging = {};
+                                user.state.troi_staging.doSearchCPs = true; // flag for troi_setup_search_cps state
+                            } else {
+                                user.state.troi_staging = {};
+                            }
+                            if (!user.state.troi_staging.doSearchCPs && prevCPs.length === 0 && newCPs.length === 0) {
+                                choiceTxt += "\n*You gave me no positions to work with unfortunately* :shrug:";
+                                user.state.troi_staging.noCPs = true; // what else? TODO
+                            }
+                            context.payload.client.chat.update({
+                                channel: user.channel,
+                                ts: context.payload.content.message.ts,
+                                blocks: [
+                                    ...troi_setup_cp_choice(choiceTxt)
+                                ],
+                                text: troi_setup_text_short
+                            }).then(() => context.getService().send("NEXT"))
                             break;
                         default:
                             context.say("Please click save first")
@@ -291,8 +343,51 @@ const machine = xstate.createMachine({
                     }
                 },
             on: {
+                NEXT: [
+                    {
+                        target: "troi_setup_receive_settings",
+                        cond: context => { return context.user.troi.positions.length === 0 && !context.user.state.troi_staging.noCPs}
+                    },
+                    {
+                        target: "troi_setup_search_cps",
+                        cond: context => { return context.user.troi.positions.length > 0 && context.user.state.troi_staging.doSearchCPs }
+                    },
+                    {
+                        target: "troi_setup_finalize",
+                        cond: context => { return context.user.troi.positions.length > 0 && !context.user.state.troi_staging.doSearchCPs}
+                    },
+                    {
+                        target: "setup_done",
+                        cond: context => { return context.user.troi.positions.length === 0 && context.user.state.troi_staging.noCPs}
+                    },
+                ]
+            }
+        },
+
+        // --------------- TROI_SETUP_SEARCH_CPS ---------------
+        troi_setup_search_cps: {
+            entry:
+                context => {
+                    console.log("in troi_setup_search_cps")
+                    // TODO
+                },
+            on: {
                 NEXT: {
-                    target: "troi_setup_receive_settings"
+                    target: "setup_done"
+                }
+            }
+        },
+
+        // --------------- TROI_SETUP_FINALIZE ---------------
+        troi_setup_finalize: {
+            entry:
+                context => {
+                    console.log("in troi_setup_finalize")
+                    // another search, give nicknames or done TODO
+                },
+            on: {
+                NEXT: {
+                    target: "setup_done"
                 }
             }
         },
