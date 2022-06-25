@@ -259,6 +259,7 @@ const machine = xstate.createMachine({
                             user.state.troi_staging.previouslyUsedCPs = str.substring(1);
                             user.state.troi_staging.newCPsById = "";
                             user.state.troi_staging.doSearchCPs = false;
+                            user.state.troi_staging.buttonWasClicked = false;
                         });
                     });
                 },
@@ -297,6 +298,7 @@ const machine = xstate.createMachine({
                             user.state.troi_staging.doSearchCPs = context.payload.content.actions[0].selected_option.value === "troi_search_Yes";
                             break;
                         case "button-response":
+                            user.state.troi_staging.buttonWasClicked = true;
                             let prevCPsRaw = user.state.troi_staging.previouslyUsedCPs;
                             let newCPsRaw = user.state.troi_staging.newCPsById;
                             let prevCPs = prevCPsRaw ? prevCPsRaw.split(",") : [];
@@ -318,8 +320,9 @@ const machine = xstate.createMachine({
                                 })
                             });
                             if (user.state.troi_staging.doSearchCPs) {
-                                choiceTxt += "\n*To search for your position(s) in the next step.*";
+                                choiceTxt += "\n*To search for (more) position(s) in the next step.*";
                                 user.state.troi_staging = {};
+                                user.state.troi_staging.buttonWasClicked = true;
                                 user.state.troi_staging.doSearchCPs = true; // flag for troi_setup_search_cps state
                             } else {
                                 user.state.troi_staging = {};
@@ -346,19 +349,19 @@ const machine = xstate.createMachine({
                 NEXT: [
                     {
                         target: "troi_setup_receive_settings",
-                        cond: context => { return context.user.troi.positions.length === 0 && !context.user.state.troi_staging.noCPs}
+                        cond: context => { return !context.user.state.troi_staging.buttonWasClicked}
                     },
                     {
                         target: "troi_setup_search_cps",
-                        cond: context => { return context.user.troi.positions.length > 0 && context.user.state.troi_staging.doSearchCPs }
+                        cond: context => { return context.user.state.troi_staging.buttonWasClicked && context.user.state.troi_staging.doSearchCPs }
                     },
                     {
                         target: "troi_setup_finalize",
-                        cond: context => { return context.user.troi.positions.length > 0 && !context.user.state.troi_staging.doSearchCPs}
+                        cond: context => { return context.user.state.troi_staging.buttonWasClicked && !context.user.state.troi_staging.doSearchCPs && context.user.troi.positions.length > 1}
                     },
                     {
                         target: "setup_done",
-                        cond: context => { return context.user.troi.positions.length === 0 && context.user.state.troi_staging.noCPs}
+                        cond: context => { return context.user.state.troi_staging.buttonWasClicked && !context.user.state.troi_staging.doSearchCPs && context.user.troi.positions.length === 1}
                     },
                 ]
             }
@@ -368,6 +371,7 @@ const machine = xstate.createMachine({
         troi_setup_search_cps: {
             entry:
                 context => {
+                    context.user.state.current = "troi_setup_search_cps"
                     console.log("in troi_setup_search_cps")
                     // TODO
                 },
@@ -382,8 +386,11 @@ const machine = xstate.createMachine({
         troi_setup_finalize: {
             entry:
                 context => {
+                    context.user.state.current = "troi_setup_finalize"
                     console.log("in troi_setup_finalize")
                     // another search, give nicknames or done TODO
+
+                    context.user.state.troi_staging = {};
                 },
             on: {
                 NEXT: {

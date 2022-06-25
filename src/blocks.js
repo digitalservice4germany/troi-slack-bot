@@ -235,7 +235,7 @@ exports.troi_setup_text = () => {
         "with me. And that is to find out which so called _position(s)_ you are booking onto. I need the IDs of those. " +
         "Unfortunately I can't access positions you might have marked as favorites directly in Troi. " +
         "I can guide you through a search process to identify those positions. However, before we resort to " +
-        " that there is two things we can try that are a bit faster: " +
+        "that there is two things we can try that are a bit faster: " +
         "\n\n• I will check on which positions you booked previously" +
         "\n• You can see a position ID when hovering the mouse over a position title in the " +
         "<https://track-your-time.dev.ds4g.net/|track-your-time> tool or under _Stundenerfassung_ in Troi (it " +
@@ -291,9 +291,9 @@ exports.troi_setup_findings = previousCPs => {
     });
 
     if (previousCPs.length === 0) {
-        blocks[0].text.text = "I couldn't find any positions that you previously booked on.";
+        blocks[0].text.text = ":mag: :shrug: I couldn't find any positions that you previously booked on.";
     } else {
-        blocks[0].text.text = "I found "
+        blocks[0].text.text = ":mag: :thumbsup: I found "
             + (previousCPs.length > 1 ? previousCPs.length + " positions" : "one position")
             + " that you previously booked on.";
         blocks.push(buildPreviousCPsChoiceBlock(previousCPs));
