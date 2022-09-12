@@ -269,7 +269,13 @@ const buildPreviousCPsChoiceBlock = previousCPs => {
 
     for (let cp of previousCPs) {
         let value = "cpID_" + cp.id;
-        let text = "Position ID " + cp.id + ": " + cp.path;
+        let posIDtext = "Position ID " + cp.id + ": ";
+        let text = posIDtext + cp.path;
+        // has to be below 151 characters, otherwise: invalid_blocks error from Slack API
+        // approach: shorten the path from the beginning
+        if (text.length > 150) {
+            text = posIDtext + "..." + text.substring(text.length - 147 + posIDtext.length);
+        }
         previousCPsChoiceBlock.element.options.push(buildCheckboxElement(text, value));
         previousCPsChoiceBlock.element.initial_options.push(buildCheckboxElement(text, value));
     }
