@@ -26,7 +26,7 @@ exports.welcome_text = onlyRemindersPossible => {
         "\n\n• send you regular reminders to book your time :bell:" +
         "\n• let you book time right here from Slack :writing_hand:" +
         "\n\nNote that you can always also book time directly in Troi " +
-        "or in our other in-house tool <https://track-your-time.dev.ds4g.net/|track-your-time>. " +
+        "or in our other in-house tool <https://track-your-time.prod.ds4g.net/|track-your-time>. " +
         "\nAlright, Please make your choice (you can always change this later on) :ballot_box_with_ballot: :drum_with_drumsticks:";
 }
 
